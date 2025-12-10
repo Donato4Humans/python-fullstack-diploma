@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -7,8 +9,10 @@ from core.services.email_service import EmailService
 from core.services.jwt_service import ActivateToken, JWTService, RecoveryToken, SocketToken
 
 from apps.auth.serializers import EmailSerializer, PasswordSerializer, UserRoleSerializer
+from apps.user.serializers import UserSerializer
+from apps.venueowners.models import VenueOwnerModel
 
-
+UserModel = get_user_model()
 class ActivateUserView(GenericAPIView):
     """
         patch:
@@ -22,6 +26,7 @@ class ActivateUserView(GenericAPIView):
         token = kwargs['token']
         user = JWTService.verify_token(token, ActivateToken)
         user.is_active = True
+        user.agreed_to_terms = True
         user.save()
         serializer = UserSerializer(user)
         return Response(serializer.data, status.HTTP_200_OK)
@@ -87,7 +92,7 @@ class UserRoleView(GenericAPIView):
 
     def get(self, request):
         user = request.user
-        is_venue_owner = VenuesModel.objects.filter(user=user).exists()
+        is_venue_owner = VenueOwnerModel.objects.filter(user=user).exists()
 
         data = {
             'is_venue_owner': is_venue_owner,

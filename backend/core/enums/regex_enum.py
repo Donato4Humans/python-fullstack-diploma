@@ -30,6 +30,10 @@ class RegexEnum(Enum):
         r'^[A-z][a-z]{,34}$',
         'Only alpha characters are allowed! Less than 35 characters are allowed.',
     )
+    STREET_VENUE = (
+        r'^[A-z][a-z]{,34}$',
+        'Only alpha characters are allowed! Less than 35 characters are allowed.',
+    )
     CITY_VENUE = (
         r'^[A-z][a-z]{,34}$',
         'Only alpha characters are allowed! Less than 35 characters are allowed.',

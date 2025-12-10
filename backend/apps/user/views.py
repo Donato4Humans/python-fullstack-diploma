@@ -7,7 +7,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView, 
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from core.tasks.send_create_admin_task import send_create_admin_task
+from core.tasks.send_create_critic_task import send_create_critic_task
 from core.tasks.send_user_blocked_email_task import send_user_blocked_email_task
 from core.tasks.send_user_delete_email_task import send_user_delete_email_task
 from core.tasks.send_user_unblocked_email_task import send_user_unblocked_email_task
@@ -87,8 +87,8 @@ class UserBlockUnblockView(GenericAPIView):
         if action not in ['block', 'unblock']:
             return Response({'error': 'Invalid action. Try "block" or "unblock".'}, status=400)
 
-        if action == 'block' and request.user == user and (user.is_staff or user.is_superuser):
-            return Response({'error': 'Admin or superuser can`t block themselves.'}, status=403)
+        if action == 'block' and request.user == user and  user.is_superuser:
+            return Response({'error': 'Superuser can`t block themself.'}, status=403)
 
 
         user.is_active = action == 'unblock'
@@ -107,10 +107,10 @@ class UserBlockUnblockView(GenericAPIView):
         return Response({'message': f'User {user.profile.name} was - {action}ed successfully', 'status': user.status})
 
 
-class UserToAdminView(GenericAPIView):
+class UserToCriticView(GenericAPIView):
     """
         patch:
-            upgrade user to admin by id
+            upgrade user to critic by id
     """
 
     permission_classes = [HasSuperuserAccess]
@@ -122,17 +122,17 @@ class UserToAdminView(GenericAPIView):
     def patch(self, request, pk):
         user = get_object_or_404(UserModel, pk=pk)
 
-        if user.is_staff:
-            return Response({'detail': 'User is already an admin.'}, status=status.HTTP_400_BAD_REQUEST)
+        if user.is_critic:
+            return Response({'detail': 'User is already critic.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        user.is_staff = True
+        user.is_critic = True
         user.save()
 
         email = user.email
         name = user.profile.name
-        send_create_admin_task.delay(email, name)
+        send_create_critic_task.delay(email, name)
 
         serializer = self.get_serializer(user)
-        return Response({'message': f'User {user.profile.name} has been upgraded to admin.',
+        return Response({'message': f'User {user.profile.name} upgraded to critic.',
                          'user': serializer.data},
                         status=status.HTTP_200_OK)

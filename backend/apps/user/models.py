@@ -15,6 +15,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin, BaseModel):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=False)
     is_critic = models.BooleanField(default=False)
+    agreed_to_terms = models.BooleanField(default=False)
     status = models.CharField(max_length=10,
                               choices=[
                                   ('active', 'Active'),

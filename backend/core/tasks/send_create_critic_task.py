@@ -3,10 +3,10 @@ from core.services.email_service import EmailService
 
 
 @app.task
-def send_create_admin_task(email, name):
+def send_create_critic_task(email, name):
     EmailService.send_email(
         to=email,
-        template_name='create_admin.html',
+        template_name='create_critic.html',
         context={'name': name},
-        subject='Admin promotion'
+        subject='Critic promotion'
     )

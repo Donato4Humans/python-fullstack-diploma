@@ -23,6 +23,8 @@ class UserManager(BaseUserManager):
 
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_critic', True)
+        extra_fields.setdefault('agreed_to_terms', True)
         extra_fields.setdefault('status', 'active')
 
         if extra_fields.get('is_active') is not True:

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block body %}
+	<h1>Venue № {{ venue_id }} has been blocked</h1>
+    <h2>Owner: {{ venueowner_name }}</h2>
+    <h3>Venue text:</h3>
+    <h3>{{ description }}</h3>
+    <p>Reason: forbidden words.</p>
+    <p>Please check venue</p>
+{% endblock %}
