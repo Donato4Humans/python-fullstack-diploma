@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from apps.auth.serializers import EmailSerializers, PasswordSerializer, UserRoleSerializer
+from apps.auth.serializers import EmailSerializer, PasswordSerializer, UserRoleSerializer
 from apps.user.models import UserModel
 
 
@@ -13,13 +13,13 @@ class UserSerializersTest(TestCase):
 
     def test_email_serializer_valid(self):
         data = {'email': 'valid@example.com'}
-        serializer = EmailSerializers(data=data)
+        serializer = EmailSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.validated_data['email'], data['email'])
 
     def test_email_serializer_invalid(self):
         data = {'email': 'invalid-email'}
-        serializer = EmailSerializers(data=data)
+        serializer = EmailSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertIn('email', serializer.errors)
 
@@ -37,24 +37,24 @@ class UserSerializersTest(TestCase):
 
     def test_user_role_serializer_valid(self):
         data = {
-            'is_staff': True,
+            'is_superuser': True,
             'is_user': False,
-            'is_seller': True,
-            'is_auto_salon_member': False
+            'is_owner': True,
+            'is_critic': False
         }
         serializer = UserRoleSerializer(data=data)
         self.assertTrue(serializer.is_valid())
-        self.assertEqual(serializer.validated_data['is_staff'], data['is_staff'])
+        self.assertEqual(serializer.validated_data['is_superuser'], data['is_superuser'])
         self.assertEqual(serializer.validated_data['is_user'], data['is_user'])
-        self.assertEqual(serializer.validated_data['is_seller'], data['is_seller'])
-        self.assertEqual(serializer.validated_data['is_auto_salon_member'], data['is_auto_salon_member'])
+        self.assertEqual(serializer.validated_data['is_owner'], data['is_owner'])
+        self.assertEqual(serializer.validated_data['is_critic'], data['is_critic'])
 
     def test_user_role_serializer_invalid_missing_fields(self):
         data = {
-            'is_staff': True,
+            'is_superuser': True,
             'is_user': False
         }
         serializer = UserRoleSerializer(data=data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('is_seller', serializer.errors)
-        self.assertIn('is_auto_salon_member', serializer.errors)
+        self.assertIn('is_owner', serializer.errors)
+        self.assertIn('is_critic', serializer.errors)

@@ -8,8 +8,7 @@ from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
 
 from apps.chat.models import ChatRoomModel, MessageModel
-from apps.salon_role.models import SalonRoleModels
-from apps.sellers.models import SellersModel
+from apps.venueowners.models import VenueOwnerModel
 
 UserModel = get_user_model()
 
@@ -119,17 +118,23 @@ class ChatConsumer(GenericAsyncAPIConsumer):
 
     @database_sync_to_async
     def get_profile_name(self):
-        return self.scope['user'].profile.name
+        user = self.scope['user']
+        if user.is_superuser:
+            return "Admin"
+        try:
+            return user.profile.name or user.email.split('@')[0]
+        except:
+            return user.email.split('@')[0]
 
     @database_sync_to_async
     def get_user_role(self):
         user = self.scope['user']
-        if user.is_staff:
+        if user.is_superuser:
             return 'admin'
-        elif SellersModel.objects.filter(user=user).exists():
-            return 'seller'
-        elif SalonRoleModels.objects.filter(user=user).exists():
-            return 'salon_member'
+        elif VenueOwnerModel.objects.filter(user=user).exists():
+            return 'owner'
+        elif user.is_critic:
+            return 'critic'
         return 'user'
 
     @database_sync_to_async

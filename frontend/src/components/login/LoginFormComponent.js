@@ -16,12 +16,12 @@ const LoginFormComponent = () => {
 
             if (data.is_staff) {
                 navigate('/admin');
-            } else if (data.is_auto_salon_member) {
-                navigate('/auto_salon');
-            } else if (data.is_seller) {
-                navigate('/sellers');
+            } else if (data.is_venue_owner) {
+                navigate('/venues');
             } else if (data.is_user) {
-                navigate('/listings');
+                navigate('/venues');
+            }else{
+                navigate('/venues');
             }
             reset();
         } catch (e) {

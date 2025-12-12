@@ -1,8 +1,8 @@
 const baseURL = '/api'
 
 const auth = '/auth'
-const sellers = '/sellers'
-const auto_salon = '/auto_salon'
+const venues = '/venues'
+// const auto_salon = '/auto_salon'
 const admin = '/admin'
 
 const urls = {
@@ -12,8 +12,7 @@ const urls = {
         refresh: `${auth}/refresh`,
         socket: `${auth}/socket`
     },
-    sellers,
-    auto_salon,
+    venues,
     admin
 }
 

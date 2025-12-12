@@ -3,6 +3,7 @@ from rest_framework import serializers
 # from apps.base_account.models import BaseAccountModel
 from apps.user.serializers import UserSerializer
 from apps.venueowners.models import VenueOwnerModel
+from apps.venues.serializers import VenueSerializer
 
 
 class OwnerSerializer(serializers.ModelSerializer):

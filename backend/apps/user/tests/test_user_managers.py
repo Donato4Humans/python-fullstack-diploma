@@ -35,6 +35,6 @@ class TestUserManager(TestCase):
         mock_create_user.assert_called_once()
         kwargs = mock_create_user.call_args.kwargs
         self.assertTrue(kwargs["is_superuser"])
-        self.assertTrue(kwargs["is_staff"])
+        self.assertTrue(kwargs["is_critic"])
         self.assertTrue(kwargs["is_active"])
         self.assertEqual(kwargs["status"], "active")

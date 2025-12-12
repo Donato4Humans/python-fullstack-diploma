@@ -14,6 +14,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from apps import venueowners
+
 from .extra_conf import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -51,7 +53,8 @@ INSTALLED_APPS = [
     'apps.auth',
     'apps.user',
     'apps.forbiddenwords',
-    # 'apps.venues',
+    'apps.venues',
+    'apps.venueowners',
     'apps.chat',
 ]
 

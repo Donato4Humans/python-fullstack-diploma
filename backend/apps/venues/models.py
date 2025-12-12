@@ -26,6 +26,7 @@ class VenueModel(BaseModel):
     country = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.CITY_VENUE.pattern, RegexEnum.CITY_VENUE.msg)])
 
     average_check = models.IntegerField(validators=[V.MinValueValidator(1)])
+    rating = models.FloatField(default=0)
 
     owner = models.ForeignKey(VenueOwnerModel, on_delete=models.CASCADE, related_name='venues')
 

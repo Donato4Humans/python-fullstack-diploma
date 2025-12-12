@@ -15,4 +15,4 @@ class TestUserModel(TestCase):
     def test_user_model_default_flags(self):
         user = UserModel()
         self.assertFalse(user.is_active)
-        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_critic)

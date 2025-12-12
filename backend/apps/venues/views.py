@@ -10,16 +10,17 @@ from rest_framework.response import Response
 
 from core.services.content_validation_service import contains_forbidden_word
 from core.services.venue_service import update_venue_views
-from core.tasks.send_blocked_listing_banned_words_email_task import send_blocked_listing_banned_words_email_task
-from core.tasks.send_listing_added_email_task import send_listing_added_email_task
-from core.tasks.send_listing_deleted_email_task import send_listing_deleted_email_task
+from core.tasks.send_blocked_venue_banned_words_email_task import send_blocked_venue_banned_words_email_task
+from core.tasks.send_venue_added_email_task import send_venue_added_email_task
+from core.tasks.send_venue_deleted_email_task import send_venue_deleted_email_task
 from drf_yasg.utils import swagger_auto_schema
 
 from apps.venueowners.models import VenueOwnerModel
 
+from .filter import VenueFilter
 from .models import VenueModel
 from .permissions import IsAdminOrSuperUser, IsOwnerOrAdmin
-from .serializers import ListingPhotoSerializer, ListingSerializer
+from .serializers import VenuePhotoSerializer, VenueSerializer
 
 
 @method_decorator(name='get',decorator=swagger_auto_schema(security=[]))
@@ -42,20 +43,10 @@ class VenueListCreateView(ListCreateAPIView):
     def perform_create(self, serializer):
         owner = VenueOwnerModel.objects.get(user=self.request.user)
 
-        # can_create, error_message = check_seller_listing_limit(seller)
-        # if not can_create:
-        #     raise ValidationError(error_message, status.HTTP_400_BAD_REQUEST)
-
         try:
             average_check = int(self.request.data.get('average_check'))
         except (TypeError, ValueError):
             raise ValidationError("Invalid or missing average check.")
-
-        # currency = self.request.data.get('currency')
-        # if currency not in ['USD', 'EUR', 'UAH']:
-        #     raise ValidationError("Invalid or missing currency.")
-
-        # price_usd, price_eur, price_uah = calculate_prices(price, currency)
 
         title = self.request.data.get('title', '')
         schedule = self.request.data.get('schedule', '')
@@ -70,6 +61,9 @@ class VenueListCreateView(ListCreateAPIView):
 
                 venue = serializer.save(
                     owner=owner,
+                    owner_id=owner.id,
+                    title=title,
+                    schedule=schedule,
                     average_check=average_check,
                     is_active=False,
                     bad_word_attempts=3,
@@ -84,105 +78,104 @@ class VenueListCreateView(ListCreateAPIView):
                 raise ValidationError(f"Venue contains forbidden words. You have {attempts_left} attempts left.")
 
 
-        listings = serializer.save(
-            seller=seller,
-            currency=currency,
-            price=price,
-            price_usd=price_usd,
-            price_eur=price_eur,
-            price_uah=price_uah,
-            exchange_rate_used=get_exchange_rates()['updated'],
+        venue = serializer.save(
+            owner=owner,
+            owner_id=owner.id,
+            title=title,
+            schedule=schedule,
+            average_check=average_check,
             is_active=True,
+            is_moderated=True,
             bad_word_attempts=0,
         )
 
-        update_exchange_rates.apply_async()
-        avg_price_task.apply_async()
-        send_listing_added_email_task.delay(
-            seller.user.email,
-            seller.user.profile.name,
-            listings.brand.brand,
-            listings.car_model.car_model,
-            price=str(listings.price),
+        # update_exchange_rates.apply_async()
+        # avg_price_task.apply_async()
+        send_venue_added_email_task.delay(
+            owner.user.email,
+            owner.user.profile.name,
+            venue.title,
+            venue.schedule,
+            venue.average_check,
         )
 
 
 @method_decorator(name='get',decorator=swagger_auto_schema(security=[]))
-class ListingRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class VenueRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """
         get:
-            get listing details by id
+            get venue details by id
         put:
-            update listing details by id
+            update venue details by id
         delete:
-            delete listing by id
+            delete venue by id
     """
-    serializer_class = ListingSerializer
+    serializer_class = VenueSerializer
     http_method_names = ['get', 'put', 'delete']
     def get_permissions(self):
         return [AllowAny()] if self.request.method == 'GET' else [IsAuthenticated(), IsOwnerOrAdmin()]
 
     def get_queryset(self):
-        return ListingSellersModel.objects.filter(is_active=True)
+        return VenueModel.objects.filter(is_active=True)
 
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        update_listing_views(instance)
+        update_venue_views(instance)
 
         serializer = self.get_serializer(instance, context={'request': request})
         return Response(serializer.data)
 
     def delete(self, request, *args, **kwargs):
-        listing = self.get_object()
-        send_listing_deleted_email_task.delay(
-            listing.seller.user.email,
-            listing.seller.user.profile.name,
-            listing.brand.brand,
-            listing.car_model.car_model,
-            price=str(listing.price),
+        venue = self.get_object()
+        send_venue_deleted_email_task.delay(
+            venue.owner.user.email,
+            venue.owner.user.profile.name,
+            venue.title,
+            venue.schedule,
+            venue.average_check,
         )
-        self.perform_destroy(listing)
+        self.perform_destroy(venue)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AddPhotoToListingView(UpdateAPIView):
+class AddPhotoToVenueView(UpdateAPIView):
     """
         put:
-            add photo to listing by id
+            add photo to venue by id
     """
 
-    serializer_class = ListingPhotoSerializer
-    queryset = ListingSellersModel.objects.all()
+    serializer_class = VenuePhotoSerializer
+    queryset = VenueModel.objects.all()
     permission_classes = [IsOwnerOrAdmin, IsAuthenticated]
     http_method_names = ['put']
 
     def perform_update(self, serializer):
-        listing = self.get_object()
-        listing.photo.delete()
+        venue = self.get_object()
+        venue.photo.delete()
         super().perform_update(serializer)
 
 
 
-class ListInactiveListingView(ListAPIView):
+class ListInactiveVenueView(ListAPIView):
     """
         get:
-            get all inactive listings list
+            get all inactive venues list
     """
 
-    serializer_class = ListingSerializer
+    serializer_class = VenueSerializer
     permission_classes = [IsAdminOrSuperUser]
-    queryset = ListingSellersModel.objects.filter(is_active=False)
+    queryset = VenueModel.objects.filter(is_active=False)
     http_method_names = ['get']
 
 
-class DeleteInactiveListingsView(RetrieveUpdateDestroyAPIView):
+class DeleteInactiveVenuesView(RetrieveUpdateDestroyAPIView):
     """
         delete:
-            delete inactive listing by id
+            delete inactive venue by id
     """
 
-    serializer_class = ListingSerializer
-    queryset = ListingSellersModel.objects.filter(is_active=False)
+    serializer_class = VenueSerializer
+    queryset = VenueModel.objects.filter(is_active=False)
     permission_classes = [IsAdminOrSuperUser]
     http_method_names = ['delete']

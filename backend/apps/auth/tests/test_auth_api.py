@@ -92,12 +92,12 @@ class AuthIntegrationTestCase(APITestCase):
         response = UserRoleView.as_view()(request)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('is_staff', response.data)
+        self.assertIn('is_superuser', response.data)
         self.assertIn('is_user', response.data)
-        self.assertIn('is_seller', response.data)
-        self.assertIn('is_auto_salon_member', response.data)
+        self.assertIn('is_critic', response.data)
+        self.assertIn('is_owner', response.data)
 
-        self.assertFalse(response.data['is_staff'])
-        self.assertFalse(response.data['is_seller'])
-        self.assertFalse(response.data['is_auto_salon_member'])
+        self.assertFalse(response.data['is_superuser'])
+        self.assertFalse(response.data['is_owner'])
+        self.assertFalse(response.data['is_critic'])
         self.assertFalse(response.data['is_user'])

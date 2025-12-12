@@ -12,7 +12,7 @@ class UserApiTestCase(APITestCase):
         self.admin = UserModel.objects.create_user(
             email='admin@test.com',
             password='adminpassword',
-            is_staff=True,
+            # is_staff=True,
             is_superuser=True
         )
 
@@ -133,7 +133,7 @@ class UserApiTestCase(APITestCase):
     def test_make_admin(self):
         self.client.force_authenticate(user=self.admin)
         response = self.client.patch(reverse(
-            'make_admin',
+            'make_critic',
             kwargs={'pk': self.user.id}),
             format="json"
         )

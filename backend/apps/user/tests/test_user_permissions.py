@@ -8,19 +8,16 @@ class TestPermissions(TestCase):
 
     def test_is_admin_or_superuser_allows_admin(self):
         request = MagicMock()
-        request.user.is_staff = True
         request.user.is_superuser = False
         assert HasAdminOrSuperuserAccess().has_permission(request, None) is True
 
     def test_is_admin_or_superuser_allows_superuser(self):
         request = MagicMock()
-        request.user.is_staff = False
         request.user.is_superuser = True
         assert HasAdminOrSuperuserAccess().has_permission(request, None) is True
 
     def test_is_admin_or_superuser_denies_user(self):
         request = MagicMock()
-        request.user.is_staff = False
         request.user.is_superuser = False
         assert HasAdminOrSuperuserAccess().has_permission(request, None) is False
 
@@ -32,7 +29,7 @@ class TestPermissions(TestCase):
 
     def test_is_owner_or_admin_allows_admin(self):
         request = MagicMock()
-        request.user = MagicMock(is_staff=True, is_superuser=False)
+        request.user = MagicMock(is_superuser=False)
         obj = MagicMock()
         assert IsOwnerOrAdmin().has_object_permission(request, None, obj) is True
 

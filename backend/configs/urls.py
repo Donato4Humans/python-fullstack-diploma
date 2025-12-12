@@ -35,6 +35,8 @@ from drf_yasg.views import get_schema_view
 urlpatterns = [
     path('api/auth', include('apps.auth.urls')),
     path('api/user', include('apps.user.urls')),
+    path('api/venue_owners', include('apps.venueowners.urls')),
+    path('api/venues', include('apps.venues.urls')),
     path('api/forbidden_words', include('apps.forbiddenwords.urls')),
     path('api/chat', include('apps.chat.urls')),
     # path('api/doc', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
