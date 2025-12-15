@@ -4,7 +4,13 @@ from django.utils.decorators import method_decorator
 
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
+from rest_framework.generics import (
+    GenericAPIView,
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
@@ -41,7 +47,16 @@ class VenueListCreateView(ListCreateAPIView):
 
 
     def perform_create(self, serializer):
-        owner = VenueOwnerModel.objects.get(user=self.request.user)
+        # if not hasattr(self.request.user, 'venue_owners'):
+        #     raise ValidationError('You must become owner to create a new venue')
+        #
+        # owner = VenueOwnerModel.objects.get(user=self.request.user)
+        user = self.request.user
+
+        owner, created = VenueOwnerModel.objects.get_or_create(
+             user=user,
+             defaults={'is_active': True}
+        )
 
         try:
             average_check = int(self.request.data.get('average_check'))
@@ -51,6 +66,7 @@ class VenueListCreateView(ListCreateAPIView):
         title = self.request.data.get('title', '')
         schedule = self.request.data.get('schedule', '')
         description = self.request.data.get('description', '')
+
         owner_key = f'bad_word_attempts_{owner.id}'
 
         if contains_forbidden_word(title) or contains_forbidden_word(schedule) or contains_forbidden_word(description) :
@@ -62,9 +78,6 @@ class VenueListCreateView(ListCreateAPIView):
                 venue = serializer.save(
                     owner=owner,
                     owner_id=owner.id,
-                    title=title,
-                    schedule=schedule,
-                    average_check=average_check,
                     is_active=False,
                     bad_word_attempts=3,
                 )
@@ -76,28 +89,23 @@ class VenueListCreateView(ListCreateAPIView):
             else:
                 attempts_left = 3 - attempts
                 raise ValidationError(f"Venue contains forbidden words. You have {attempts_left} attempts left.")
+        else:
+            venue = serializer.save(
+                owner=owner,
+                owner_id=owner.id,
+                is_active=True,
+                is_moderated=False,
+                bad_word_attempts=0,
+            )
+            admin_name = owner.user.email.split('@')[0]
+            send_venue_added_email_task.delay(
+                owner.user.email,
+                owner.user.profile.name if not owner.user.is_superuser else admin_name,
+                venue.title,
+                venue.schedule,
+                venue.average_check,
+            )
 
-
-        venue = serializer.save(
-            owner=owner,
-            owner_id=owner.id,
-            title=title,
-            schedule=schedule,
-            average_check=average_check,
-            is_active=True,
-            is_moderated=True,
-            bad_word_attempts=0,
-        )
-
-        # update_exchange_rates.apply_async()
-        # avg_price_task.apply_async()
-        send_venue_added_email_task.delay(
-            owner.user.email,
-            owner.user.profile.name,
-            venue.title,
-            venue.schedule,
-            venue.average_check,
-        )
 
 
 @method_decorator(name='get',decorator=swagger_auto_schema(security=[]))
@@ -123,14 +131,17 @@ class VenueRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         update_venue_views(instance)
 
+        # TODO: add there avg rating count(or celery beat task) later
+
         serializer = self.get_serializer(instance, context={'request': request})
         return Response(serializer.data)
 
     def delete(self, request, *args, **kwargs):
         venue = self.get_object()
+        admin_name = venue.owner.user.email.split('@')[0]
         send_venue_deleted_email_task.delay(
             venue.owner.user.email,
-            venue.owner.user.profile.name,
+            venue.owner.user.profile.name if not venue.owner.user.is_superuser else admin_name,
             venue.title,
             venue.schedule,
             venue.average_check,
@@ -165,7 +176,7 @@ class ListInactiveVenueView(ListAPIView):
 
     serializer_class = VenueSerializer
     permission_classes = [IsAdminOrSuperUser]
-    queryset = VenueModel.objects.filter(is_active=False)
+    queryset = VenueModel.objects.filter(is_active=False, is_moderated=False)
     http_method_names = ['get']
 
 
@@ -176,6 +187,6 @@ class DeleteInactiveVenuesView(RetrieveUpdateDestroyAPIView):
     """
 
     serializer_class = VenueSerializer
-    queryset = VenueModel.objects.filter(is_active=False)
+    queryset = VenueModel.objects.filter(is_active=False, is_moderated=False)
     permission_classes = [IsAdminOrSuperUser]
     http_method_names = ['delete']

@@ -128,9 +128,7 @@ class UserToCriticView(GenericAPIView):
         user.is_critic = True
         user.save()
 
-        email = user.email
-        name = user.profile.name
-        send_create_critic_task.delay(email, name)
+        send_create_critic_task.delay(user.email, user.profile.name)
 
         serializer = self.get_serializer(user)
         return Response({'message': f'User {user.profile.name} upgraded to critic.',

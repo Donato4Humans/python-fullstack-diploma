@@ -32,15 +32,24 @@ class OwnersListCreateView(ListCreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
 
-        if hasattr(user, 'venue_owners'):
-            raise ValidationError("You are already a owner!")
+        # if hasattr(user, 'venue_owners'):
+        #     raise ValidationError("You are already a owner!")
+        #
+        # owner = serializer.save(user=user)
 
-        seller = serializer.save(user=user)
+        if user.is_superuser:
+            # Superuser can create owner without user field
+            serializer.save()  # ← no user needed
+        else:
+            if hasattr(user, 'venue_owners'):
+                raise ValidationError("You are already a venue owner!")
+            serializer.save(user=user)
+            send_owner_create_email_task.delay(user.email, user.profile.name)
 
-        # if not hasattr(seller, 'base_account'):
-        #     BaseAccountModel.objects.create(seller=seller)
+        # if not hasattr(owner, 'base_account'):
+        #     BaseAccountModel.objects.create(owner=owner)
 
-        send_owner_create_email_task.delay(user.email, user.profile.name)
+
 
 
 
@@ -58,39 +67,11 @@ class OwnersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     http_method_names = ['get', 'delete']
 
     def delete(self, request, *args, **kwargs):
-        seller = self.get_object()
-        email = seller.user.email
-        name = seller.user.profile.name
+        owner = self.get_object()
 
-        send_owner_deleted_email_task.delay(email, name)
+        admin_name = owner.user.email.split('@')[0]
 
-        self.perform_destroy(seller)
+        send_owner_deleted_email_task.delay(owner.user.email, owner.user.profile.name if not owner.user.is_superuser else admin_name)
+
+        self.perform_destroy(owner)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-# class PremiumAccountPurchaseApiView(GenericAPIView):
-#     """
-#         post:
-#             buy premium account as seller
-#     """
-#     permission_classes = [IsAuthenticated]
-#     def get_serializer(self):
-#         return None
-#
-#     def post(self, request, *args, **kwargs):
-#         seller = SellersModel.objects.filter(user=request.user).first()
-#
-#         if not seller:
-#             return Response({'error': 'You are not a seller'}, status=status.HTTP_400_BAD_REQUEST)
-#         if hasattr(seller, 'premium_account'):
-#             return Response({'error': 'You already have premium account'}, status=status.HTTP_400_BAD_REQUEST)
-#
-#         premium_account = PremiumAccountModel.objects.create(seller=seller)
-#         send_premium_activate_email_task(seller.user.email, seller.user.profile.name)
-#
-#         seller.base_account.delete()
-#         seller.premium_account = premium_account
-#         seller.save()
-#
-#         return Response({'message': 'Premium account activated successfully'}, status=status.HTTP_200_OK)

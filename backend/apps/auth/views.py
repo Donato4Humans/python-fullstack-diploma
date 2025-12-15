@@ -65,7 +65,7 @@ class RecoveryPasswordView(GenericAPIView):
         user = JWTService.verify_token(token, RecoveryToken)
         user.set_password(serializer.data['password'])
         user.save()
-        # serializer = UserSerializer(user)
+        serializer = UserSerializer(user)
         return Response({'details': 'Password was changed successfully'}, status.HTTP_200_OK)
 
 class SocketTokenView(GenericAPIView):

@@ -19,8 +19,10 @@ class OwnerSerializer(serializers.ModelSerializer):
             'updated_at',
             'created_at',
             'venues',
+            'is_active'
             # 'account_type',
         )
+        read_only_fields = ('user', 'is_active')
 
 
     # def get_account_type(self, obj):

@@ -11,6 +11,7 @@ class VenueSerializer(serializers.ModelSerializer):
     average_check = serializers.IntegerField()
     title = serializers.CharField()
     schedule = serializers.CharField()
+    # maybe lon/lat as must field
 
     rating = serializers.FloatField(read_only=True)
     views = serializers.IntegerField(read_only=True)
@@ -26,6 +27,8 @@ class VenueSerializer(serializers.ModelSerializer):
             'id',
             'average_check',
             'rating',
+            'latitude',
+            'longitude',
             'house',
             'street',
             'country',
@@ -34,6 +37,7 @@ class VenueSerializer(serializers.ModelSerializer):
             'title',
             'schedule',
             'description',
+            'category',
             'owner',
             'owner_id',
             'photo',
@@ -63,7 +67,7 @@ class VenueSerializer(serializers.ModelSerializer):
 
         # is_privileged = hasattr(instance.seller, 'premium_account')
 
-        if not instance.owner.user.is_critic or instance.owner.user.is_superuser:
+        if not instance.owner.user.is_critic and not instance.owner.user.is_superuser:
             for field in [
                 'views',
                 'daily_views',

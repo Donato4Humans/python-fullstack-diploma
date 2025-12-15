@@ -17,7 +17,17 @@ class VenueModel(BaseModel):
     title = models.CharField(max_length=35)
     schedule = models.CharField(max_length=250)
     description = models.CharField(max_length=250)
+    category = models.CharField(max_length=10,
+                              choices=[
+                                  ('cafe', 'Cafe'),
+                                  ('restaurant', 'Restaurant'),
+                                  ('bar', 'Bar'),
+                                  ('mixed', 'Mixed')],
+                              default='mixed')
     photo = models.ImageField(upload_to=upload_venue_photo, blank=True)
+
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
     house = models.IntegerField(validators=[V.MinValueValidator(1)])
     street = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.STREET_VENUE.pattern, RegexEnum.STREET_VENUE.msg)])
