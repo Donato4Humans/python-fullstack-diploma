@@ -58,3 +58,8 @@ class VenueModel(BaseModel):
             except Exception as e:
                 print(f'Could not delete photo: {e}')
         super().delete(*args, **kwargs)
+
+    def update_rating(self):
+        avg = self.reviews.aggregate(models.Avg('rating'))['rating__avg']
+        self.rating = round(avg or 0, 1)
+        self.save(update_fields=['rating'])

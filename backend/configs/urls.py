@@ -37,6 +37,8 @@ urlpatterns = [
     path('api/user', include('apps.user.urls')),
     path('api/venue_owners', include('apps.venueowners.urls')),
     path('api/venues', include('apps.venues.urls')),
+
+    path('api/review', include('apps.review.urls')),
     path('api/forbidden_words', include('apps.forbiddenwords.urls')),
     path('api/chat', include('apps.chat.urls')),
     # path('api/doc', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),

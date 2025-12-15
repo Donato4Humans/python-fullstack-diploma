@@ -40,7 +40,7 @@ class VenueListCreateView(ListCreateAPIView):
     serializer_class = VenueSerializer
     filterset_class = VenueFilter
     def get_queryset(self):
-        return VenueModel.objects.filter(is_active=True)
+        return VenueModel.objects.filter(is_active=True, is_moderated=True)
 
     def get_permissions(self):
         return [IsAuthenticated()] if self.request.method == 'POST' else [AllowAny()]
@@ -130,8 +130,6 @@ class VenueRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         update_venue_views(instance)
-
-        # TODO: add there avg rating count(or celery beat task) later
 
         serializer = self.get_serializer(instance, context={'request': request})
         return Response(serializer.data)
