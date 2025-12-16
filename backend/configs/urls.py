@@ -43,6 +43,7 @@ urlpatterns = [
     path('api/top', include('apps.top.urls')),
     path('api/comments', include('apps.comments.urls')),
     path('api/favorite', include('apps.favorite.urls')),
+    path('api/piyachok', include('apps.piyachok.urls')),
     path('api/forbidden_words', include('apps.forbiddenwords.urls')),
     path('api/chat', include('apps.chat.urls')),
     # path('api/doc', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),

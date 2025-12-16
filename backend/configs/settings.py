@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.top',
     'apps.comments',
     'apps.favorite',
+    'apps.piyachok',
 ]
 
 MIDDLEWARE = [
