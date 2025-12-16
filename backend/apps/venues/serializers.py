@@ -12,6 +12,8 @@ class VenueSerializer(serializers.ModelSerializer):
     title = serializers.CharField()
     schedule = serializers.CharField()
     # maybe lon/lat as must field
+    favorite_count = serializers.SerializerMethodField()
+
 
     rating = serializers.FloatField(read_only=True)
     views = serializers.IntegerField(read_only=True)
@@ -26,6 +28,7 @@ class VenueSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'average_check',
+            'favorite_count',
             'rating',
             'latitude',
             'longitude',
@@ -89,6 +92,9 @@ class VenueSerializer(serializers.ModelSerializer):
         if average_check <= 0:
             raise serializers.ValidationError('Average check must be greater than 0')
         return average_check
+
+    def get_favorite_count(self, obj):
+        return obj.favorited_by.count()
 
 
 class VenuePhotoSerializer(serializers.ModelSerializer):
