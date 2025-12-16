@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'apps.news',
     'apps.tag',
     'apps.top',
+    'apps.comments',
+    'apps.favorite',
 ]
 
 MIDDLEWARE = [
