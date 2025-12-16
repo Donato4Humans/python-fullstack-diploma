@@ -1,11 +1,14 @@
 
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView
 from rest_framework.permissions import AllowAny
 
 from apps.venues.models import VenueModel
 from apps.venues.serializers import VenueSerializer
 
 from .filter import TopVenueFilter
+from .models import SponsoredTopModel
+from .permissions import IsAdminOrSuperUser
+from .serializers import SponsoredTopSerializer
 
 
 class TopVenuesView(ListAPIView):
@@ -62,3 +65,24 @@ class TopByTagView(ListAPIView):
             is_moderated=True,
             venue_tags__tag__name=tag_name
         ).order_by('-rating')[:10]
+
+
+class SponsoredTopListView(ListAPIView):
+    """
+        get:
+            get admin-moderated sponsored top
+    """
+    queryset = SponsoredTopModel.objects.select_related('venue').all()
+    serializer_class = SponsoredTopSerializer
+    permission_classes = [AllowAny]
+
+class SponsoredTopAdminView(ListCreateAPIView):
+    """
+        get:
+            get sponsored top by admin
+        post:
+             update sponsored top by admin
+    """
+    queryset = SponsoredTopModel.objects.select_related('venue').all()
+    serializer_class = SponsoredTopSerializer
+    permission_classes = [IsAdminOrSuperUser]

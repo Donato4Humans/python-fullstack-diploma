@@ -1,9 +1,12 @@
 
 from django_filters import rest_framework as filters
+
+from apps.tag.models import TagModel
 from apps.venues.models import VenueModel
 
+
 class TopVenueFilter(filters.FilterSet):
-    category = filters.ChoiceFilter(choices=VenueModel.CATEGORY_CHOICES)
+    category = filters.ChoiceFilter(choices=VenueModel.category)
     tag = filters.ModelMultipleChoiceFilter(
         field_name='venue_tags__tag__name',
         to_field_name='name',
