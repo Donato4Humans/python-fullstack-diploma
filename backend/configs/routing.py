@@ -3,6 +3,7 @@ from django.urls import path
 from channels.routing import URLRouter
 
 from apps.chat.routing import websocket_urlpatterns as chat_routing
+from apps.news.routing import websocket_urlpatterns as news_routing
 from apps.review.routing import websocket_urlpatterns as reviews_routing
 from apps.venues.routing import websocket_urlpatterns as venues_routing
 
@@ -10,4 +11,5 @@ websocket_urlpatterns = [
     path('api/chat/', URLRouter(chat_routing)),
     path('api/venues/', URLRouter(venues_routing)),
     path('api/review/', URLRouter(reviews_routing)),
+    path('api/news/', URLRouter(news_routing)),
 ]

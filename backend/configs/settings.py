@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'apps.venueowners',
     'apps.chat',
     'apps.review',
-
+    'apps.news',
 ]
 
 MIDDLEWARE = [
