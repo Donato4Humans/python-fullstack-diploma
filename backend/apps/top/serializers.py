@@ -1,0 +1,1 @@
+from apps.venues.serializers import VenueSerializer

@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'apps.review',
     'apps.news',
     'apps.tag',
+    'apps.top',
 ]
 
 MIDDLEWARE = [
