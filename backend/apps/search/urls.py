@@ -5,4 +5,5 @@ from .views import GlobalSearchView
 
 urlpatterns = [
     path('', GlobalSearchView.as_view(), name='global_search'),
+    path('/', GlobalSearchView.as_view(), name='global_search'),
 ]

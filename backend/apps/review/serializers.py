@@ -9,19 +9,16 @@ from .models import ReviewModel
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    venue = serializers.PrimaryKeyRelatedField(
-        queryset=VenueModel.objects.filter(is_active=True, is_moderated=True),
-        write_only=True
-    )
-    venue_title = serializers.CharField(source='venue.title', read_only=True)
     author_name = serializers.CharField(source='author.profile.name', read_only=True)
+
+    venue_title = serializers.CharField(source='venue.title', read_only=True)
     is_critic_review = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = ReviewModel
         fields = (
             'id',
-            'venue',
+            # 'venue',
             'venue_title',
             'author',
             'author_name',
@@ -35,10 +32,16 @@ class ReviewSerializer(serializers.ModelSerializer):
             'author', 'is_critic_review', 'created_at', 'updated_at',
             'venue_title', 'author_name'
         )
+        extra_kwargs = {
+            'rating': {'required': False},
+            'text': {'required': False},
+        }
 
     def validate(self, attrs):
         user = self.context['request'].user
-        venue = attrs['venue']
+        venue = self.context['view'].kwargs.get('venue_pk')
+        if not venue:
+            raise serializers.ValidationError("Venue not specified")
 
         # One review per user per venue
         if ReviewModel.objects.filter(author=user, venue=venue).exists():

@@ -6,7 +6,7 @@ from apps.venues.models import VenueModel
 
 
 class TopVenueFilter(filters.FilterSet):
-    category = filters.ChoiceFilter(choices=VenueModel.category)
+    category = filters.ChoiceFilter(choices=VenueModel.CATEGORY_CHOICES)
     tag = filters.ModelMultipleChoiceFilter(
         field_name='venue_tags__tag__name',
         to_field_name='name',

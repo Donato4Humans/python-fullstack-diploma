@@ -30,6 +30,7 @@ class VenueSerializer(serializers.ModelSerializer):
             'id',
             'average_check',
             'favorite_count',
+            'piyachok_request_count',
             'rating',
             'latitude',
             'longitude',
@@ -56,6 +57,21 @@ class VenueSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ['id', 'owner', 'views', 'daily_views', 'weekly_views', 'monthly_views', 'is_active',
                             'is_moderated']
+        extra_kwargs = {
+            'title': {'required': False},
+            'description': {'required': False},
+            'schedule': {'required': False},
+            'average_check': {'required': False},
+            'category': {'required': False},
+            'house': {'required': False},
+            'street': {'required': False},
+            'city': {'required': False},
+            'region': {'required': False},
+            'country': {'required': False},
+            'latitude': {'required': False},
+            'longitude': {'required': False},
+            'photo': {'required': False},
+        }
 
 
     def create(self, validated_data):

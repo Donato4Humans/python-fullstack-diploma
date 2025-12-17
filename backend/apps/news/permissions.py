@@ -1,11 +1,20 @@
 from rest_framework.permissions import BasePermission
 
 
-class IsOwnerOrAdmin(BasePermission):
+class IsNewsAuthorOrAdmin(BasePermission):
+
     def has_object_permission(self, request, view, obj):
-        return request.user == obj.owner.user  or request.user.is_superuser
+        user = request.user
 
+        if user.is_superuser:
+            return True
 
-class IsAdminOrSuperUser(BasePermission):
-    def has_permission(self, request, view):
-        return request.user and request.user.is_superuser
+        if user.is_critic:
+            return True
+
+        # If news has venue — check if user owns that venue
+        if obj.venue:
+            return obj.venue.owner.user == user
+
+        # Global news — only critic or superuser
+        return False

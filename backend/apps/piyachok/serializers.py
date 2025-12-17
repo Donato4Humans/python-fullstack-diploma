@@ -1,3 +1,4 @@
+from email.policy import default
 
 from rest_framework import serializers
 
@@ -15,7 +16,7 @@ class PiyachokRequestSerializer(serializers.ModelSerializer):
         queryset=VenueModel.objects.filter(is_active=True, is_moderated=True),
         source='preferred_venue',
         write_only=True,
-        required=False,
+        required=True,
         allow_null=True
     )
     requester_name = serializers.CharField(source='requester.profile.name', read_only=True)
@@ -26,27 +27,43 @@ class PiyachokRequestSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'requester',
+            'requester_name',
             'gender_preference',
             'budget',
             'who_pays',
             'preferred_venue',
             'preferred_venue_id',
+            'venue_title',
             'status',
             'note',
             'created_at',
             'updated_at',
         )
         read_only_fields = ('status', 'created_at', 'updated_at', 'requester')
+        extra_kwargs = {
+            'gender_preference': {'required': False, 'default': 'A'},
+            'budget': {'required': True},
+            'who_pays': {'required': True},
+            'preferred_venue_id': {'required': False},
+            'note': {'required': False, 'allow_blank': True},
+        }
 
     def validate(self, attrs):
+        instance = self.instance
+        if instance and instance.status != 'pending':
+            raise serializers.ValidationError("Cannot update request that is no longer pending.")
+
+
+
         user = self.context['request'].user
         # limit number of active requests per user
-        active_requests = PiyachokRequestModel.objects.filter(
-            requester=user,
-            status='pending'
-        ).count()
-        if active_requests >= 3:
-            raise serializers.ValidationError("You can have maximum 3 active requests.")
+        if 'budget' in attrs or 'gender_preference' in attrs:  # if changing key fields
+            active_requests = PiyachokRequestModel.objects.filter(
+                requester=user,
+                status='pending'
+            ).exclude(pk=instance.pk if instance else None).count()
+            if active_requests >= 3:
+                raise serializers.ValidationError("You can have maximum 3 active requests.")
         return attrs
 
 

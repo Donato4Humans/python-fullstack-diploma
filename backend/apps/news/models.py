@@ -30,7 +30,8 @@ class NewsModel(BaseModel):
     content = models.TextField()
     photo = models.ImageField(
         upload_to=upload_news_photo,
-        blank=True
+        blank=True,
+        null=True
     )
     type = models.CharField(
         max_length=20,

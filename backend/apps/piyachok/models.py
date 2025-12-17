@@ -92,7 +92,9 @@ class MatchModel(BaseModel):
     request2 = models.ForeignKey(
         PiyachokRequestModel,
         on_delete=models.CASCADE,
-        related_name='matches_as_request2'
+        related_name='matches_as_request2',
+        null=True,
+        blank=True
     )
     suggested_venue = models.ForeignKey(
         VenueModel,

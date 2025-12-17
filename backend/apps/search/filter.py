@@ -14,14 +14,14 @@ class VenueSearchFilter(filters.FilterSet):
                 ?tag=wifi&tag=terrace
                 ?min_price=300&max_price=800
     """
-    category = filters.ChoiceFilter(choices=VenueModel.category)
+    category = filters.ChoiceFilter(choices=VenueModel.CATEGORY_CHOICES)
     min_rating = filters.NumberFilter(field_name='rating', lookup_expr='gte')
     max_rating = filters.NumberFilter(field_name='rating', lookup_expr='lte')
     min_price = filters.NumberFilter(field_name='average_check', lookup_expr='gte')
     max_price = filters.NumberFilter(field_name='average_check', lookup_expr='lte')
 
     tag = filters.ModelMultipleChoiceFilter(
-        field_name='venue_tags__tag',
+        field_name='venue_tags__tag__name',
         to_field_name='name',
         queryset=TagModel.objects.all(),
         conjoined=False

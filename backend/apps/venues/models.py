@@ -10,19 +10,22 @@ from core.services.file_service import upload_venue_photo
 from apps.venueowners.models import VenueOwnerModel
 
 
-class VenueModel(BaseModel):
+class  VenueModel(BaseModel):
     class Meta:
         db_table = 'venues'
+
+    CATEGORY_CHOICES = [
+        ('cafe', 'Cafe'),
+        ('restaurant', 'Restaurant'),
+        ('bar', 'Bar'),
+        ('mixed', 'Mixed'),
+    ]
 
     title = models.CharField(max_length=35)
     schedule = models.CharField(max_length=250)
     description = models.CharField(max_length=250)
     category = models.CharField(max_length=10,
-                              choices=[
-                                  ('cafe', 'Cafe'),
-                                  ('restaurant', 'Restaurant'),
-                                  ('bar', 'Bar'),
-                                  ('mixed', 'Mixed')],
+                              choices=CATEGORY_CHOICES,
                               default='mixed')
     photo = models.ImageField(upload_to=upload_venue_photo, blank=True)
 

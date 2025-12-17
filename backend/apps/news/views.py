@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from .filter import NewsFilter
 from .models import NewsModel
-from .permissions import IsOwnerOrAdmin
+from .permissions import IsNewsAuthorOrAdmin
 from .serializers import NewsSerializer
 
 
@@ -67,7 +67,7 @@ class NewsRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """
     serializer_class = NewsSerializer
     http_method_names = ['get', 'put', 'delete']
-    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+    permission_classes = [IsAuthenticated, IsNewsAuthorOrAdmin]
 
     def get_queryset(self):
         return NewsModel.objects.select_related('venue')

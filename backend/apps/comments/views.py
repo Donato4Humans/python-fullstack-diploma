@@ -20,6 +20,7 @@ class CommentListCreateView(ListCreateAPIView):
     """
     serializer_class = CommentSerializer
     http_method_names = ['get', 'post']
+    permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
         if self.request.method == 'GET':
