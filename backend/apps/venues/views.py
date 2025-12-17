@@ -4,7 +4,14 @@ from django.utils.decorators import method_decorator
 
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
+from rest_framework.generics import (
+    GenericAPIView,
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    UpdateAPIView,
+    get_object_or_404,
+)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
@@ -141,6 +148,41 @@ class VenueRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         self.perform_destroy(venue)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class VenueTransferOwnershipView(GenericAPIView):
+    """
+        patch:
+            transfer venue ownership to another user
+    """
+    permission_classes = [IsAdminOrSuperUser]
+
+    def patch(self, request, pk):
+        venue = get_object_or_404(VenueModel, pk=pk)
+        new_owner_id = request.data.get('new_owner_id')
+
+        if not new_owner_id:
+            return Response(
+                {"detail": "new_owner_id required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            new_owner = VenueOwnerModel.objects.get(id=new_owner_id)
+        except VenueOwnerModel.DoesNotExist:
+            return Response(
+                {"detail": "New owner not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        old_owner = venue.owner
+        venue.owner = new_owner
+        venue.save()
+
+        return Response({
+            "detail": f"Venue transferred from {old_owner.user.email} to {new_owner.user.email}",
+            "venue_id": venue.id,
+            "new_owner": new_owner.user.email
+        })
 
 class AddPhotoToVenueView(UpdateAPIView):
     """
