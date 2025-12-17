@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 
 from rest_framework import status
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -95,6 +95,75 @@ class MatchAcceptView(RetrieveUpdateAPIView):
         match.save()
 
         return Response({"detail": "Match accepted!", "chat_room": match.chat_room_id}, status=status.HTTP_200_OK)
+
+
+class ActiveRequestsListView(ListAPIView):
+    """
+        get:
+            get all active (pending) Piyachok requests
+    """
+    serializer_class = PiyachokRequestSerializer
+    http_method_names = ['get']
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return PiyachokRequestModel.objects.filter(
+            status='pending',
+            venue__is_active=True,
+            venue__is_moderated=True
+        ).select_related('requester__profile', 'preferred_venue')
+
+
+class JoinRequestView(GenericAPIView):
+    """
+        post:
+            join someone else's request + instant match
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        user = request.user
+
+        # Get the original request
+        try:
+            original_request = PiyachokRequestModel.objects.get(
+                pk=pk,
+                status='pending'
+            )
+        except PiyachokRequestModel.DoesNotExist:
+            return Response(
+                {"detail": "Request not found or no longer active"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if original_request.requester == user:
+            return Response(
+                {"detail": "You cannot join your own request"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Create match
+        match = MatchModel.objects.create(
+            request1=original_request,
+            request2=None,
+            suggested_venue=original_request.preferred_venue,
+            is_accepted=True
+        )
+
+        # Generate chat room
+        import uuid
+        match.chat_room_id = f"match_{match.id}_{uuid.uuid4().hex[:8]}"
+        match.save()
+
+        # mark original as matched
+        original_request.status = 'matched'
+        original_request.save()
+
+        return Response({
+            "detail": "You joined the request! Chat opened.",
+            "chat_room": match.chat_room_id,
+            "match_id": match.id
+        }, status=status.HTTP_201_CREATED)
 
 class RunMatchingView(APIView):
     permission_classes = [IsAdminOrSuperUser]

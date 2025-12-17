@@ -18,6 +18,8 @@ class PiyachokRequestSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
+    requester_name = serializers.CharField(source='requester.profile.name', read_only=True)
+    venue_title = serializers.CharField(source='preferred_venue.title', read_only=True)
 
     class Meta:
         model = PiyachokRequestModel
