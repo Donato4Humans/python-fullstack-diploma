@@ -13,6 +13,7 @@ class VenueSerializer(serializers.ModelSerializer):
     schedule = serializers.CharField()
     # maybe lon/lat as must field
     favorite_count = serializers.SerializerMethodField()
+    piyachok_request_count = serializers.SerializerMethodField()
 
 
     rating = serializers.FloatField(read_only=True)
@@ -95,6 +96,9 @@ class VenueSerializer(serializers.ModelSerializer):
 
     def get_favorite_count(self, obj):
         return obj.favorited_by.count()
+
+    def get_piyachok_request_count(self, obj):
+        return obj.piyachok_requests.filter(status='pending').count()
 
 
 class VenuePhotoSerializer(serializers.ModelSerializer):

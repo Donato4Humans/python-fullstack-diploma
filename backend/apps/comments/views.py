@@ -14,7 +14,7 @@ from .serializers import CommentSerializer
 class CommentListCreateView(ListCreateAPIView):
     """
         get:
-            get list all visible comments for venue
+            get all visible comments for venue
         post:
             create comment (moderated by default)
     """
@@ -50,6 +50,20 @@ class CommentListCreateView(ListCreateAPIView):
             is_moderated=True
             )
 
+class MyCommentsListView(ListAPIView):
+    """
+        get:
+            get all comments written by current user
+    """
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return CommentModel.objects.filter(
+            author=user,
+            is_moderated=True  # only moderated comments
+        ).select_related('venue').order_by('-created_at')
 
 class CommentRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """

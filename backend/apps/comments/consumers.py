@@ -13,9 +13,9 @@ class CommentConsumer(GenericAsyncAPIConsumer):
         super().__init__(*args, **kwargs)
 
     async def connect(self):
-        if not self.scope['user'].is_authenticated:
-            await self.close()
-            return
+        # if not self.scope['user'].is_authenticated:
+        #     await self.close()
+        #     return
         await self.accept()
         await self.channel_layer.group_add(self.group_name, self.channel_name)
 

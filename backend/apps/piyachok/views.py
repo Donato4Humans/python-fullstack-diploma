@@ -114,6 +114,24 @@ class ActiveRequestsListView(ListAPIView):
         ).select_related('requester__profile', 'preferred_venue')
 
 
+class VenuePiyachokRequestsView(ListAPIView):
+    """
+        get:
+            get list of all active Piyachok requests for specific venue
+    """
+    serializer_class = PiyachokRequestSerializer
+    http_method_names = ['get']
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        venue_pk = self.kwargs['venue_pk']
+        return PiyachokRequestModel.objects.filter(
+            status='pending',
+            preferred_venue_id=venue_pk,
+            preferred_venue__is_active=True,
+            preferred_venue__is_moderated=True
+        ).select_related('requester__profile')
+
 class JoinRequestView(GenericAPIView):
     """
         post:

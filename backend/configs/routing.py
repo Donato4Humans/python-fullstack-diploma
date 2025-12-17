@@ -5,6 +5,7 @@ from channels.routing import URLRouter
 from apps.chat.routing import websocket_urlpatterns as chat_routing
 from apps.comments.routing import websocket_urlpatterns as comments_routing
 from apps.news.routing import websocket_urlpatterns as news_routing
+from apps.piyachok.routing import websocket_urlpatterns as piyachok_routing
 from apps.review.routing import websocket_urlpatterns as reviews_routing
 from apps.venues.routing import websocket_urlpatterns as venues_routing
 
@@ -14,4 +15,5 @@ websocket_urlpatterns = [
     path('api/review/', URLRouter(reviews_routing)),
     path('api/news/', URLRouter(news_routing)),
     path('api/comments/', URLRouter(comments_routing)),
+    path('api/piyachok/', URLRouter(piyachok_routing)),
 ]
