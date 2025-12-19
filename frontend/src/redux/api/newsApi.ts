@@ -13,7 +13,7 @@ export const newsApi = createApi({
     // GET /api/news — all news (global + venue) (public)
     getAllNews: builder.query<INews[], void>({
       query: () => 'news',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'News' as const, id })),
@@ -36,7 +36,7 @@ export const newsApi = createApi({
     // GET /api/news/global — global news only (public)
     getGlobalNews: builder.query<INews[], void>({
       query: () => 'news/global',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'News' as const, id })),
@@ -48,7 +48,7 @@ export const newsApi = createApi({
     // GET /api/news/venue/<venue_pk> — venue news only (public)
     getVenueNews: builder.query<INews[], number>({
       query: (venueId) => `news/venue/${venueId}`,
-      providesTags: (result, _error, venueId) =>
+      providesTags: (result= [], _error, venueId) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'News' as const, id })),

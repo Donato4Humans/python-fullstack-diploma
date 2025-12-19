@@ -13,7 +13,7 @@ export const reviewApi = createApi({
     // GET /api/review/venue/<venue_pk> — list reviews for venue (public)
     getVenueReviews: builder.query<IReview[], number>({
       query: (venueId) => `review/venue/${venueId}`,
-      providesTags: (result, _error, venueId) =>
+      providesTags: (result= [], _error, venueId) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'Review' as const, id })),

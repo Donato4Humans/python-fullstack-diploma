@@ -57,7 +57,7 @@ const SearchComponent = () => {
       params.delete('sort');
     }
 
-    navigate(`/venues?${params.toString()}`);
+    navigate(`/venues/?${params.toString()}`);
   };
 
   return (

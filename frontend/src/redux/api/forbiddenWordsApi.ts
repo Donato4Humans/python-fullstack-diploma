@@ -13,7 +13,7 @@ export const forbiddenWordsApi = createApi({
     // GET /api/forbidden_words — list all forbidden words (admin only)
     getForbiddenWords: builder.query<IForbiddenWord[], void>({
       query: () => 'forbidden_words',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'ForbiddenWord' as const, id })),

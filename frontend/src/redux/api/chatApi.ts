@@ -15,7 +15,7 @@ export const chatApi = createApi({
     // GET /api/chat — list user's chat rooms
     getChatRooms: builder.query<IChatRoom[], void>({
       query: () => 'chat',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'ChatRoom' as const, id })),

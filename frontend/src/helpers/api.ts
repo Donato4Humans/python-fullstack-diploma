@@ -5,7 +5,7 @@ import type {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit
 
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:80/api/',
+  baseUrl: '/api/',
   prepareHeaders: (headers, { }) => {
     const token = localStorage.getItem('access');
     if (token) {

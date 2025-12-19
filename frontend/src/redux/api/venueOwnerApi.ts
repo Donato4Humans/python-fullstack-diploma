@@ -13,7 +13,7 @@ export const venueOwnerApi = createApi({
     // GET /api/venue_owners — list owners (admin only)
     getVenueOwners: builder.query<IVenueOwner[], void>({
       query: () => 'venue_owners',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'VenueOwner' as const, id })),

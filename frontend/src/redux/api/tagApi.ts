@@ -15,7 +15,7 @@ export const tagApi = createApi({
         url: 'tags',
         params,
       }),
-      providesTags: (result) =>
+      providesTags: (result = []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'Tag' as const, id })),
@@ -65,7 +65,7 @@ export const tagApi = createApi({
     // GET /api/tags/venue/<venue_pk> — list tags for venue (public)
     getVenueTags: builder.query<IVenueTag[], number>({
       query: (venueId) => `tags/venue/${venueId}`,
-      providesTags: (result, _error, venueId) =>
+      providesTags: (result= [], _error, venueId) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'VenueTag' as const, id })),

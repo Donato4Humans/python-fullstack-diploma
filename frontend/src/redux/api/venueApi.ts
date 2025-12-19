@@ -15,7 +15,7 @@ export const venueApi = createApi({
         url: 'venues',
         params,
       }),
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'Venue' as const, id })),
@@ -26,7 +26,7 @@ export const venueApi = createApi({
 
     getMyVenues: builder.query<IVenue[], void>({
       query: () => 'venues/my',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'Venue' as const, id })),
@@ -106,7 +106,7 @@ export const venueApi = createApi({
     // GET /api/venues/inactive — list inactive venues (admin only)
     getInactiveVenues: builder.query<IVenue[], void>({
       query: () => 'venues/inactive',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'InactiveVenue' as const, id })),

@@ -12,7 +12,7 @@ export const favoritesApi = createApi({
     // GET /api/favorite — list user's favorites
     getFavorites: builder.query<IFavorite[], void>({
       query: () => 'favorite',
-      providesTags: (result) =>
+      providesTags: (result= []) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'Favorite' as const, id })),
