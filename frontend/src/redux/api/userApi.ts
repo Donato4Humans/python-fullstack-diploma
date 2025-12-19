@@ -1,9 +1,9 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import { IAuthResponse, ISignUpRequest } from '../../models/IAuth';
+import type {IAuthResponse, ISignUpRequest} from '../../models/IAuth';
 import { setUser } from '../slices/userSlice';
-import {IBlockUnblockRequest, IBlockUnblockResponse, IMakeCriticResponse, IUser} from "../../models/IUser";
+import type {IBlockUnblockRequest, IBlockUnblockResponse, IMakeCriticResponse, IUser} from "../../models/IUser";
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -16,7 +16,7 @@ export const userApi = createApi({
         method: 'POST',
         body: data,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem('access', data.tokens.access);
@@ -36,7 +36,7 @@ export const userApi = createApi({
     // Get user detail
     getUser: builder.query<IUser, number>({
       query: (id) => `user/${id}`,
-      providesTags: (result, error, id) => [{ type: 'User', id }],
+      providesTags: (_result, _error, id) => [{ type: 'User', id }],
     }),
 
     // Update user
@@ -46,7 +46,7 @@ export const userApi = createApi({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'User', id }, 'User'],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }, 'User'],
     }),
 
     deleteUser: builder.mutation<void, number>({
@@ -64,7 +64,7 @@ export const userApi = createApi({
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'User', id }, 'User'],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }, 'User'],
     }),
 
     // Make user critic
@@ -73,7 +73,7 @@ export const userApi = createApi({
         url: `user/make_critic/${id}`,
         method: 'PATCH',
       }),
-      invalidatesTags: (result, error, id) => [{ type: 'User', id }, 'User'],
+      invalidatesTags: (_result, _error, id) => [{ type: 'User', id }, 'User'],
     }),
   }),
 });

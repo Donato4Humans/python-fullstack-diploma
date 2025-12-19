@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IForbiddenWord} from "../../models/IForbiddenWord";
+import type {IForbiddenWord} from "../../models/IForbiddenWord";
 
 
 export const forbiddenWordsApi = createApi({
@@ -35,7 +35,7 @@ export const forbiddenWordsApi = createApi({
     // GET /api/forbidden_words/<pk> — detail
     getForbiddenWord: builder.query<IForbiddenWord, number>({
       query: (id) => `forbidden_words/${id}`,
-      providesTags: (result, error, id) => [{ type: 'ForbiddenWord', id }],
+      providesTags: (_result, _error, id) => [{ type: 'ForbiddenWord', id }],
     }),
 
     // PUT /api/forbidden_words/<pk> — full update
@@ -45,7 +45,7 @@ export const forbiddenWordsApi = createApi({
         method: 'PUT',
         body: { word },
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: 'ForbiddenWord', id },
         { type: 'ForbiddenWord', id: 'LIST' },
       ],
@@ -58,7 +58,7 @@ export const forbiddenWordsApi = createApi({
         method: 'PATCH',
         body: { word },
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: 'ForbiddenWord', id },
         { type: 'ForbiddenWord', id: 'LIST' },
       ],

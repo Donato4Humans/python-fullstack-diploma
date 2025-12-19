@@ -1,5 +1,5 @@
+import type {IComment} from "../../models/IComment";
 
-import { IUser, IComment } from '../../types';
 
 const VenueCommentComponent = ({ comment }: { comment: IComment }) => {
   const { author_name, text, is_moderated, created_at } = comment;

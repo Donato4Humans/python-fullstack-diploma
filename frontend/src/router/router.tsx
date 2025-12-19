@@ -10,21 +10,22 @@ import VenuesPage from '../pages/venues/VenuesPage';
 import VenuePage from '../pages/venues/VenuePage';
 import PiyachokPage from '../pages/piyachok/PiyachokPage';
 import VenuePiyachokPage from '../pages/piyachok/VenuePiyachokPage';
-import AdminPage from '../pages/Profile/AdminPage';
-import CreateVenuePage from '../pages/Profile/CreateVenuePage';
-import EditVenuePage from '../pages/Profile/EditVenuePage';
-import FavoritesPage from '../pages/Profile/FavoritesPage';
-import MyVenuesPage from '../pages/Profile/MyVenuesPage';
-import MyCommentsPage from '../pages/Profile/MyCommentsPage';
-import MyReviewsPage from '../pages/Profile/MyReviewsPage';
-import MyMatchesPage from '../pages/profile/MyMatchesPage';
-import ProfileMainPage from '../pages/profile/ProfileMainPage';
-import ProfileSecurityPage from '../pages/Profile/ProfileSecurityPage';
 import NewsGeneralPage from "../pages/news/NewsGeneralPage";
 import NewsDetailPage from "../pages/news/NewsDetailPage";
 import NewsVenuePage from "../pages/news/NewsVenuePage";
 import NewsVenueDetailPage from "../pages/news/NewsVenueDetailPage";
 import TopPage from "../pages/top/TopPage";
+import ProfileMainPage from '../pages/profile/ProfileMainPage';
+import MyMatchesPage from '../pages/profile/MyMatchesPage';
+import MyVenuesPage from '../pages/profile/MyVenuesPage';
+import CreateVenuePage from '../pages/profile/CreateVenuePage';
+import EditVenuePage from '../pages/profile/EditVenuePage';
+import FavoritesPage from '../pages/profile/FavoritesPage';
+import MyCommentsPage from '../pages/profile/MyCommentsPage';
+import MyReviewsPage from '../pages/profile/MyReviewsPage';
+import ProfileSecurityPage from '../pages/profile/ProfileSecurityPage';
+import AdminPage from '../pages/profile/AdminPage';
+import RequireAuth from "../components/common/RequireAuth";
 
 export const routes: RouteObject[] = [
     {
@@ -34,8 +35,8 @@ export const routes: RouteObject[] = [
             { index: true, element: <HomePage /> },
             { path: 'venues', element: <VenuesPage /> },
             { path: 'venues/:venueId', element: <VenuePage /> },
-            { path: 'piyachok', element: <PiyachokPage /> },
-            { path: 'piyachok/venue/:venueId', element: <VenuePiyachokPage /> },
+            { path: 'piyachok', element: <RequireAuth><PiyachokPage /></RequireAuth> },
+            { path: 'piyachok/venue/:venueId', element: <RequireAuth><VenuePiyachokPage /></RequireAuth> },
             { path: 'news-general', element: <NewsGeneralPage /> },
             { path: 'news-general/:newsId', element: <NewsDetailPage /> },
             { path: 'news-venues/:venueId', element: <NewsVenuePage /> },
@@ -43,7 +44,7 @@ export const routes: RouteObject[] = [
             { path: 'top', element: <TopPage /> },
             {
                 path: 'profile',
-                element: <ProfileLayout />,
+                element: <RequireAuth><ProfileLayout /></RequireAuth>,
                 children: [
                     { index: true, element: <ProfileMainPage /> },
                     { path: 'my-venues', element: <MyVenuesPage /> },
@@ -67,8 +68,12 @@ export const routes: RouteObject[] = [
         ],
     },
     {
-        path: '/auth/activate',
+        path: '/auth/activate/:token',
         element: <VerifyEmailPage />,
+    },
+    {
+      path: '/auth/recovery/:token',
+      element: <ProfileSecurityPage />,
     },
     {
         path: '*',
@@ -76,5 +81,5 @@ export const routes: RouteObject[] = [
     },
 ];
 
-const router = createBrowserRouter(routes);
+export const router = createBrowserRouter(routes);
 export default router;

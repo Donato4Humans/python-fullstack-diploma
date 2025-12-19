@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import { setUser } from '../slices/userSlice';
-import {IAuthResponse, ISignInRequest} from "../../models/IAuth";
+import type {IAuthResponse, ISignInRequest} from "../../models/IAuth";
 
 
 export const authApi = createApi({
@@ -15,7 +15,7 @@ export const authApi = createApi({
         method: 'POST',
         body: credentials,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem('access', data.tokens.access);

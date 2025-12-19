@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import {INews} from "../../models/INews";
+import type {INews} from "../../models/INews";
 
 const GeneralNewsCard = ({ news }: { news: INews }) => {
   return (

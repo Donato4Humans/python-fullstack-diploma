@@ -30,7 +30,7 @@ const SignInPage = () => {
             Sign In
           </h2>
         </div>
-        <LoginForm onSubmit={signIn} />
+        <LoginForm onSignIn={signIn} />
       </div>
     </div>
   );

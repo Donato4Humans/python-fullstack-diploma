@@ -1,5 +1,5 @@
-import {IPiyachokRequest} from "./IPiyachokRequest";
-import {IVenue} from "./IVenue";
+import type {IPiyachokRequest} from "./IPiyachokRequest";
+import type {IVenue} from "./IVenue";
 
 export interface IMatch {
   id: number;

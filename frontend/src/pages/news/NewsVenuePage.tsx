@@ -1,7 +1,7 @@
 
 import { useParams } from 'react-router-dom';
 import { useGetVenueNewsQuery } from '../../redux/api/newsApi';
-import VenueNewsCard from '../../components/venues/VenueNewsCard';
+import VenueNewsCard from "../../components/news/VenueNewsCard";
 
 const NewsVenuePage = () => {
   const { venueId } = useParams<{ venueId: string }>();

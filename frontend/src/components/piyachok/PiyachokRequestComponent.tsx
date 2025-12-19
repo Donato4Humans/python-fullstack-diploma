@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { useJoinRequestMutation } from '../../redux/api/piyachokApi';
-import {IPiyachokRequest} from "../../models/IPiyachokRequest";
+import type {IPiyachokRequest} from "../../models/IPiyachokRequest";
 
 const PiyachokRequestComponent = ({ request }: { request: IPiyachokRequest }) => {
   const [joinRequest, { isLoading }] = useJoinRequestMutation();
@@ -21,7 +21,7 @@ const PiyachokRequestComponent = ({ request }: { request: IPiyachokRequest }) =>
     <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200 hover:shadow-xl transition-shadow">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-bold text-gray-900">{request.requester_name}</h3>
+          <h3 className="text-xl font-bold text-gray-900">{request.requester.profile.name}</h3>
           <p className="text-sm text-gray-600">Budget: {request.budget} ₴</p>
           <p className="text-sm text-gray-600">Pays: {request.who_pays}</p>
           <p className="text-sm text-gray-600">Gender preference: {request.gender_preference}</p>

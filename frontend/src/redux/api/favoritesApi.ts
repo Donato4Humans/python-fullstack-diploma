@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IFavorite} from "../../models/IFavorite";
+import type {IFavorite} from "../../models/IFavorite";
 
 export const favoritesApi = createApi({
   reducerPath: 'favoritesApi',

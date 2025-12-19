@@ -1,5 +1,5 @@
-import {IVenue} from "./IVenue";
-import {IUser} from "./IUser";
+import type {IVenue} from "./IVenue";
+import type {IUser} from "./IUser";
 
 export interface IVenueOwner {
   id: number;

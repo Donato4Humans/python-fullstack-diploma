@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {ITag, IVenueTag} from "../../models/ITag";
+import type {ITag, IVenueTag} from "../../models/ITag";
 
 export const tagApi = createApi({
   reducerPath: 'tagApi',
@@ -37,7 +37,7 @@ export const tagApi = createApi({
     // GET /api/tags/<pk> — tag detail
     getTag: builder.query<ITag, number>({
       query: (id) => `tags/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Tag', id }],
+      providesTags: (_result, _error, id) => [{ type: 'Tag', id }],
     }),
 
     // PUT /api/tags/<pk> — update tag (superadmin)
@@ -47,7 +47,7 @@ export const tagApi = createApi({
         method: 'PUT',
         body: { name },
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: 'Tag', id },
         { type: 'Tag', id: 'LIST' },
       ],
@@ -65,7 +65,7 @@ export const tagApi = createApi({
     // GET /api/tags/venue/<venue_pk> — list tags for venue (public)
     getVenueTags: builder.query<IVenueTag[], number>({
       query: (venueId) => `tags/venue/${venueId}`,
-      providesTags: (result, error, venueId) =>
+      providesTags: (result, _error, venueId) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'VenueTag' as const, id })),
@@ -81,7 +81,7 @@ export const tagApi = createApi({
         method: 'POST',
         body: { tag_id },
       }),
-      invalidatesTags: (result, error, { venueId }) => [
+      invalidatesTags: (_result, _error, { venueId }) => [
         { type: 'VenueTag', id: venueId },
         { type: 'Venue', id: venueId },  // refetch venue to update tags
       ],

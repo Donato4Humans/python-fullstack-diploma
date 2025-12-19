@@ -1,18 +1,18 @@
 
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/rtk';
 import { useDeleteUserMutation, useUpdateUserMutation } from '../../redux/api/userApi';
-import  userSliceActions  from '../../redux/slices/userSlice';
-import {IUser, IProfile} from "../../models/IUser";
+import { setUser, logout } from '../../redux/slices/userSlice';
+import type {IUser} from '../../models/IUser';
+import DeleteAccountModal from './DeleteAccountModal';
 
 interface ProfileFormData {
   name: string;
   surname: string;
   age: number;
   gender: string;
-  // Add address fields later if needed
   street: string;
   city: string;
   region: string;
@@ -23,13 +23,13 @@ interface ProfileFormData {
 const ProfileEditForm = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user);
-  const [updateMe] = useUpdateUserMutation();
-  const [deleteMe] = useDeleteUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
   const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<ProfileFormData>({
+  const { handleSubmit, register, formState: { errors }, setValue } = useForm<ProfileFormData>({
     defaultValues: {
       name: user?.profile?.name || '',
       surname: user?.profile?.surname || '',
@@ -59,19 +59,24 @@ const ProfileEditForm = () => {
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
-      const profileData = {
-        name: data.name.trim(),
-        surname: data.surname.trim(),
-        age: data.age,
-        gender: data.gender,
-        street: data.street.trim(),
-        city: data.city.trim(),
-        region: data.region.trim(),
-        country: data.country.trim(),
-        house: data.house,
+      // Send only profile fields — no id
+      const updateData = {
+        profile: {
+          name: data.name.trim(),
+          surname: data.surname.trim(),
+          age: data.age,
+          gender: data.gender,
+          street: data.street.trim(),
+          city: data.city.trim(),
+          region: data.region.trim(),
+          country: data.country.trim(),
+          house: data.house,
+        },
       };
-      const updatedUser = await updateMe({ profile: profileData }).unwrap();
-      dispatch(userSliceActions.setUser(updatedUser));
+
+      // Type is Partial<IUser> — profile is Partial<IProfile>
+      const updatedUser = await updateUser({ id: user!.id, data: updateData as Partial<IUser> }).unwrap();
+      dispatch(setUser(updatedUser));
       setSuccessMsg('Profile updated successfully!');
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (error) {
@@ -81,10 +86,10 @@ const ProfileEditForm = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      await deleteMe().unwrap();
+      await deleteUser(user!.id).unwrap();
       localStorage.removeItem('access');
       localStorage.removeItem('refresh');
-      dispatch(userSliceActions.logout());
+      dispatch(logout());
       navigate('/');
     } catch (error) {
       alert('Delete failed');
@@ -93,21 +98,8 @@ const ProfileEditForm = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Left — Photo and basic info */}
+      {/* Left — Quick links */}
       <div className="space-y-6">
-        {/*<div className="bg-white p-6 rounded-xl shadow-md border">*/}
-        {/*  <h3 className="text-lg font-semibold mb-4">Profile Photo</h3>*/}
-        {/*  <div className="text-center">*/}
-        {/*    <img*/}
-        {/*      src={user?.profile?.photo || '/placeholder.jpg'}*/}
-        {/*      alt="Profile"*/}
-        {/*      className="w-32 h-32 rounded-full mx-auto mb-4"*/}
-        {/*    />*/}
-        {/*    <input type="file" accept="image/*" onChange={(e) => e.target.files && handlePhotoUpload(e.target.files[0])} className="block mx-auto" />*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
-        {/* Quick links to other sections */}
         <div className="bg-white p-6 rounded-xl shadow-md border">
           <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
           <ul className="space-y-2">
@@ -127,7 +119,15 @@ const ProfileEditForm = () => {
         >
           Delete Account
         </button>
+          <DeleteAccountModal
+          open={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onConfirm={handleDeleteAccount}
+          isLoading={false}
+          />
       </div>
+
+
 
       {/* Right — Edit form */}
       <div className="bg-white p-6 rounded-xl shadow-md border">

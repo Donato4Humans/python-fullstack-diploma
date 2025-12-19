@@ -1,8 +1,8 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IPiyachokRequest} from "../../models/IPiyachokRequest";
-import {IMatch} from "../../models/IMatch";
+import type {IPiyachokRequest} from "../../models/IPiyachokRequest";
+import type {IMatch} from "../../models/IMatch";
 
 export const piyachokApi = createApi({
   reducerPath: 'piyachokApi',
@@ -30,7 +30,7 @@ export const piyachokApi = createApi({
     // GET /api/piyachok/requests/<pk> — my request detail
     getMyRequest: builder.query<IPiyachokRequest, number>({
       query: (id) => `piyachok/requests/${id}`,
-      providesTags: (result, error, id) => [{ type: 'MyRequests', id }],
+      providesTags: (_result, _error, id) => [{ type: 'MyRequests', id }],
     }),
 
     // PUT /api/piyachok/requests/<pk> — update request (if pending)
@@ -40,7 +40,7 @@ export const piyachokApi = createApi({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: 'MyRequests', id },
         'MyRequests',
         'ActiveRequests',
@@ -71,7 +71,7 @@ export const piyachokApi = createApi({
     // GET /api/piyachok/venue/<venue_pk> — active requests for specific venue
     getVenueRequests: builder.query<IPiyachokRequest[], number>({
       query: (venueId) => `piyachok/venue/${venueId}`,
-      providesTags: (result, error, venueId) => [{ type: 'VenueRequests', id: venueId }],
+      providesTags: (_result, _error, venueId) => [{ type: 'VenueRequests', id: venueId }],
     }),
 
     // POST /api/piyachok/join/<pk> — join request (instant match + chat)

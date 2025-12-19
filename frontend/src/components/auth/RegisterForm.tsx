@@ -1,8 +1,8 @@
 
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import {ISignUpRequest} from "../../models/IAuth";
-import {IProfile} from "../../models/IUser";
+import type {ISignUpRequest} from "../../models/IAuth";
+// import {IProfile} from "../../models/IUser";
 
 interface RegisterFormProps {
   onSubmit: (data: ISignUpRequest) => Promise<void>;

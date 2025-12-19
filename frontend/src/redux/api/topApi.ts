@@ -1,8 +1,8 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IVenue} from "../../models/IVenue";
-import {ISponsoredTop} from "../../models/ISponsoredTop";
+import type {IVenue} from "../../models/IVenue";
+import type {ISponsoredTop} from "../../models/ISponsoredTop";
 
 
 export const topApi = createApi({

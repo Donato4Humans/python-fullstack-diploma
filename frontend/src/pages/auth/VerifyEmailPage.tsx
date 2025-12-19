@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 const VerifyEmailPage = () => {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
-  const [activateUser, { isLoading, isSuccess, error }] = useActivateUserMutation();
+  const [activateUser, { isLoading, isSuccess, isError }] = useActivateUserMutation();
 
   useEffect(() => {
     if (token) {
@@ -16,22 +16,18 @@ const VerifyEmailPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      const timer = setTimeout(() => navigate('/auth/sign-in'), 2000);
-      return () => clearTimeout(timer);
+      setTimeout(() => navigate('/auth/sign-in'), 3000);
     }
   }, [isSuccess, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      <div className="max-w-md w-full text-center space-y-4">
-        <h2 className="text-3xl font-bold text-gray-900">
-          {isLoading ? 'Verifying email...' : isSuccess ? 'Email verified successfully!' : 'Verify Email'}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold mb-4">
+          {isLoading ? 'Activating account...' : isSuccess ? 'Account activated!' : 'Activation failed'}
         </h2>
-        <p className="text-gray-600">
-          {isLoading && 'Please wait while we verify your email...'}
-          {isSuccess && 'Redirecting to sign in...'}
-          {error && 'Verification failed. Please try again.'}
-        </p>
+        {isSuccess && <p className="text-gray-600">Redirecting to sign in...</p>}
+        {isError && <p className="text-red-600">Invalid or expired token</p>}
       </div>
     </div>
   );

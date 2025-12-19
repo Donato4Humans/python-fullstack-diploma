@@ -1,6 +1,6 @@
 
 import { StarIcon } from '@heroicons/react/24/solid';
-import {IReview} from "../../models/IReview";
+import type {IReview} from "../../models/IReview";
 
 
 const VenueReviewComponent = ({ review }: { review: IReview }) => {

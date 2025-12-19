@@ -1,4 +1,4 @@
-import {IUser} from "./IUser";
+import type {IUser} from "./IUser";
 
 export interface IComment {
   id: number;

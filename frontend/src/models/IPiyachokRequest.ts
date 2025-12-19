@@ -1,5 +1,5 @@
-import {IUser} from "./IUser";
-import {IVenue} from "./IVenue";
+import type {IUser} from "./IUser";
+import type {IVenue} from "./IVenue";
 
 export interface IPiyachokRequest {
   id: number;

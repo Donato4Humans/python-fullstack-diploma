@@ -1,21 +1,21 @@
 
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import {ISignInRequest} from "../../models/IAuth";
+import type {ISignInRequest} from "../../models/IAuth";
 
 interface LoginFormProps {
-  onSubmit: (data: ISignInRequest) => Promise<void>;
+  onSignIn: any; // RTK mutation
 }
 
-const LoginForm = ({ onSubmit }: LoginFormProps) => {
+const LoginForm = ({ onSignIn }: LoginFormProps) => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ISignInRequest>();
 
   const handleFormSubmit = async (data: ISignInRequest) => {
     try {
-      await onSubmit(data);
+      await onSignIn(data).unwrap(); // unwrap for data/error
     } catch (error) {
-      // On failure (no user), redirect to sign-up
+      // On failure, redirect to sign-up
       navigate('/auth/sign-up');
     }
   };

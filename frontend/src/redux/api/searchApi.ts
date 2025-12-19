@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {ISearchParams, ISearchResponse} from "../../models/ISearch";
+import type {ISearchParams, ISearchResponse} from "../../models/ISearch";
 
 export const searchApi = createApi({
   reducerPath: 'searchApi',

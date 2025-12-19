@@ -1,62 +1,44 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.18",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.11.2",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.13.2",
     "joi": "^18.0.2",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
     "react-hook-form": "^7.68.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.10.1",
-    "react-scripts": "5.0.1",
+    "react-router-dom": "^7.11.0",
     "react-select": "^5.10.2",
-    "web-vitals": "^2.1.4",
     "websocket": "^1.0.35"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.3",
-    "@types/react": "^19.2.7",
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
     "@types/websocket": "^1.0.10",
-    "eslint": "^9.39.2",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.26",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.0",
-    "@tailwindcss/postcss": "^4.1.18",
     "autoprefixer": "^10.4.23",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src/ --ext .ts,.tsx --fix",
-    "lint:watch": "eslintrc src/ --ext .ts,.tsx --fix --watch"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4"
   }
 }

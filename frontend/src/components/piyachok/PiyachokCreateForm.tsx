@@ -1,7 +1,7 @@
 
 import { useForm } from 'react-hook-form';
 import { useCreateRequestMutation } from '../../redux/api/piyachokApi';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useGetVenuesQuery } from '../../redux/api/venueApi';
 
 interface PiyachokCreateFormProps {
@@ -17,9 +17,9 @@ interface CreateRequestForm {
 }
 
 const PiyachokCreateForm = ({ onClose }: PiyachokCreateFormProps) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [createRequest] = useCreateRequestMutation();
-  const { data: venues = [] } = useGetVenuesQuery({ limit: 10 }); // load venues for dropdown
+  const { data: venues = [] } = useGetVenuesQuery(undefined); // no limit — all venues
 
   const { register, handleSubmit, reset } = useForm<CreateRequestForm>({
     defaultValues: {

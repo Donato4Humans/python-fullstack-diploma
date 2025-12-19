@@ -1,12 +1,12 @@
 
 import { useGetMyMatchesQuery, useAcceptMatchMutation } from '../../redux/api/piyachokApi';
-import { useAppSelector } from '../../hooks/rtk';
+// import { useAppSelector } from '../../hooks/rtk';
 import { useNavigate } from 'react-router-dom';
-import {IMatch} from "../../models/IMatch";
+// import {IMatch} from "../../models/IMatch";
 
 const MyMatchesPage = () => {
   const navigate = useNavigate();
-  const user = useAppSelector((state) => state.user.user);
+  // const user = useAppSelector((state) => state.user.user);
   const { data: matches = [], isLoading } = useGetMyMatchesQuery();
   const [acceptMatch] = useAcceptMatchMutation();
 
@@ -32,7 +32,7 @@ const MyMatchesPage = () => {
     <div className="space-y-6">
       {matches.map((match) => (
         <div key={match.id} className="bg-white rounded-xl p-6 shadow-md border">
-          <h3 className="text-xl font-bold mb-2">Match with {match.request1.requester_name}</h3>
+          <h3 className="text-xl font-bold mb-2">Match with {match.request1.requester.profile.name}</h3>
           <p className="text-gray-600 mb-4">Suggested venue: {match.suggested_venue?.title}</p>
           <button
             onClick={() => handleAccept(match.id)}

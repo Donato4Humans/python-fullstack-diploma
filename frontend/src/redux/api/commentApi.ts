@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IComment} from "../../models/IComment";
+import type {IComment} from "../../models/IComment";
 
 export const commentApi = createApi({
   reducerPath: 'commentApi',
@@ -12,7 +12,7 @@ export const commentApi = createApi({
     // GET /api/comments/venue/<venue_pk> — visible comments (public)
     getVenueComments: builder.query<IComment[], number>({
       query: (venueId) => `comments/venue/${venueId}`,
-      providesTags: (result, error, venueId) =>
+      providesTags: (result, _error, venueId) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'Comment' as const, id })),
@@ -28,7 +28,7 @@ export const commentApi = createApi({
         method: 'POST',
         body: { text },
       }),
-      invalidatesTags: (result, error, { venueId }) => [
+      invalidatesTags: (_result, _error, { venueId }) => [
         { type: 'VenueComments', id: venueId },
         'Comment',  // my comments
       ],
@@ -46,7 +46,7 @@ export const commentApi = createApi({
     // GET /api/comments/<pk> — comment detail
     getComment: builder.query<IComment, number>({
       query: (id) => `comments/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Comment', id }],
+      providesTags: (_result, _error, id) => [{ type: 'Comment', id }],
     }),
 
     // PUT /api/comments/<pk> — update comment (owner/admin)

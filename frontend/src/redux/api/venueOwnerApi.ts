@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IVenueOwner} from "../../models/IVenueOwner";
+import type {IVenueOwner} from "../../models/IVenueOwner";
 
 
 export const venueOwnerApi = createApi({
@@ -35,7 +35,7 @@ export const venueOwnerApi = createApi({
     // GET /api/venue_owners/<pk> — owner detail (owner/admin)
     getVenueOwner: builder.query<IVenueOwner, number>({
       query: (id) => `venue_owners/${id}`,
-      providesTags: (result, error, id) => [{ type: 'VenueOwner', id }],
+      providesTags: (_result, _error, id) => [{ type: 'VenueOwner', id }],
     }),
 
     // DELETE /api/venue_owners/<pk> — delete owner (owner/admin)

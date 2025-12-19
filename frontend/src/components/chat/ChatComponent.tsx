@@ -1,7 +1,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useGetSocketTokenQuery } from '../../redux/api/authApi';
-import { useAppSelector } from '../../hooks/rtk';
+// import { useAppSelector } from '../../hooks/rtk';
 
 interface ChatMessage {
   userId: string;
@@ -17,11 +17,11 @@ interface ChatComponentProps {
 const ChatComponent = ({ room }: ChatComponentProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const [targetUser, setTargetUser] = useState<string | null>(null);
+  const [targetUser, ] = useState<string | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const user = useAppSelector((state) => state.user.user);
+  // const user = useAppSelector((state) => state.user.user);
   const { data: socketToken } = useGetSocketTokenQuery(undefined, { skip: !room });
 
   useEffect(() => {

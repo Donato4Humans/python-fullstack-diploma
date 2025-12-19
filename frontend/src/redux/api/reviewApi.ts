@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IReview} from "../../models/IReview";
+import type {IReview} from "../../models/IReview";
 
 
 export const reviewApi = createApi({
@@ -13,7 +13,7 @@ export const reviewApi = createApi({
     // GET /api/review/venue/<venue_pk> — list reviews for venue (public)
     getVenueReviews: builder.query<IReview[], number>({
       query: (venueId) => `review/venue/${venueId}`,
-      providesTags: (result, error, venueId) =>
+      providesTags: (result, _error, venueId) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'Review' as const, id })),
@@ -28,7 +28,7 @@ export const reviewApi = createApi({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: (result, error, { venueId }) => [
+      invalidatesTags: (_result, _error, { venueId }) => [
         { type: 'VenueReviews', id: venueId },
         { type: 'Venue', id: venueId },  // refetch venue to update rating
         'Review',                        // refetch my reviews if needed
@@ -47,7 +47,7 @@ export const reviewApi = createApi({
     // GET /api/review/<pk> — review detail
     getReview: builder.query<IReview, number>({
       query: (id) => `review/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Review', id }],
+      providesTags: (_result, _error, id) => [{ type: 'Review', id }],
     }),
 
     // PUT /api/review/<pk> — update review (owner/admin)
@@ -57,7 +57,7 @@ export const reviewApi = createApi({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (result, error, arg) => {
+      invalidatesTags: (result, _error, arg) => {
         // result is IReview — has venue (number) from serializer
         const venueId = result?.venue as number | undefined;
         return [

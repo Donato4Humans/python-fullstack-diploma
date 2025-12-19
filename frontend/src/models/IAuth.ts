@@ -1,5 +1,5 @@
-import {IProfile, IUser} from "./IUser";
-import {ITokenPair} from "./ITokenPair";
+import type {IProfile, IUser} from "./IUser";
+import type {ITokenPair} from "./ITokenPair";
 
 export interface ISignInRequest {
 	email: string;

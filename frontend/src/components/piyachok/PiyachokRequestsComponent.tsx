@@ -2,13 +2,8 @@
 import { useGetActiveRequestsQuery } from '../../redux/api/piyachokApi';
 import PiyachokRequestComponent from './PiyachokRequestComponent';
 
-interface PiyachokRequestsComponentProps {
-  venueId?: number; // optional for venue filter
-}
-
-const PiyachokRequestsComponent = ({ venueId }: PiyachokRequestsComponentProps) => {
-  const query = venueId ? { venueId } : undefined;
-  const { data: requests = [], isLoading, isError } = useGetVenueRequestsQuery(query || undefined);
+const PiyachokRequestsComponent = () => {
+  const { data: requests = [], isLoading, isError } = useGetActiveRequestsQuery();
 
   if (isLoading) {
     return <div className="text-center py-20 text-gray-600">Loading requests...</div>;

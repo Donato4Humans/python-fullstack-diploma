@@ -1,4 +1,4 @@
-import {IVenue} from "./IVenue";
+import type {IVenue} from "./IVenue";
 
 export interface INews {
   id: number;

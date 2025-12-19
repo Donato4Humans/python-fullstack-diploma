@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IChatRoom, IChatRoomDetailResponse} from "../../models/IChat";
+import type {IChatRoom, IChatRoomDetailResponse} from "../../models/IChat";
 
 
 
@@ -27,7 +27,7 @@ export const chatApi = createApi({
     // GET /api/chat/<pk> — chat room detail + messages
     getChatRoomDetail: builder.query<IChatRoomDetailResponse, number>({
       query: (roomId) => `chat/${roomId}`,
-      providesTags: (result, error, roomId) => [
+      providesTags: (_result, _error, roomId) => [
         { type: 'ChatRoom', id: roomId },
         { type: 'Message', id: 'LIST' },
       ],
@@ -39,7 +39,7 @@ export const chatApi = createApi({
         url: `chat/delete/${roomId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, roomId) => [
+      invalidatesTags: (_result, _error, roomId) => [
         { type: 'ChatRoom', id: roomId },
         { type: 'ChatRoom', id: 'LIST' },
       ],
@@ -51,7 +51,7 @@ export const chatApi = createApi({
         url: `chat/messages/delete/${messageId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, messageId) => [
+      invalidatesTags: (_result, _error, messageId) => [
         { type: 'Message', id: messageId },
         { type: 'Message', id: 'LIST' },
       ],

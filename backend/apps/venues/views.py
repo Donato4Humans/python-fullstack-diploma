@@ -107,7 +107,16 @@ class VenueListCreateView(ListCreateAPIView):
                 venue.average_check,
             )
 
+class VenueOwnerVenuesView(ListAPIView):
+    """
+        get:
+            get all venues owned by current user
+    """
+    serializer_class = VenueSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return VenueModel.objects.filter(owner__user=self.request.user)
 
 @method_decorator(name='get',decorator=swagger_auto_schema(security=[]))
 class VenueRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):

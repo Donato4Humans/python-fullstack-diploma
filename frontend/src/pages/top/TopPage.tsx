@@ -4,36 +4,50 @@ import SponsoredTopComponent from '../../components/top/SponsoredTopComponent';
 import GeneralTopComponent from '../../components/top/GeneralTopComponent';
 
 const TopPage = () => {
-  const [selectedTopType, setSelectedTopType] = useState<'sponsored' | 'category' | 'tag' | 'general'>('general');
+  const [topType, setTopType] = useState<'general' | 'category' | 'tag'>('general');
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-4xl font-bold text-gray-900 mb-12 text-center">
+        <h1 className="text-5xl font-bold text-gray-900 mb-12 text-center">
           Top Venues
         </h1>
 
-        {/* Sponsored top — always shown at top */}
+        {/* Sponsored */}
         <SponsoredTopComponent />
 
-        {/* Dropdown to switch general top type */}
-        <div className="mb-8 text-center">
-          <label className="text-lg font-semibold text-gray-700 mr-4">
-            View top by:
-          </label>
-          <select
-            value={selectedTopType}
-            onChange={(e) => setSelectedTopType(e.target.value as any)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="general">General (by rating)</option>
-            <option value="category">By category</option>
-            <option value="tag">By tag</option>
-          </select>
+        {/* Selector */}
+        <div className="text-center mb-12">
+          <div className="inline-flex rounded-lg shadow-lg bg-white p-1">
+            <button
+              onClick={() => setTopType('general')}
+              className={`px-6 py-3 rounded-md font-medium transition ${
+                topType === 'general' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              General
+            </button>
+            <button
+              onClick={() => setTopType('category')}
+              className={`px-6 py-3 rounded-md font-medium transition ${
+                topType === 'category' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              By Category
+            </button>
+            <button
+              onClick={() => setTopType('tag')}
+              className={`px-6 py-3 rounded-md font-medium transition ${
+                topType === 'tag' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              By Tag
+            </button>
+          </div>
         </div>
 
-        {/* General top based on selection */}
-        <GeneralTopComponent type={selectedTopType} />
+        {/* General top */}
+        <GeneralTopComponent type={topType} />
       </div>
     </div>
   );

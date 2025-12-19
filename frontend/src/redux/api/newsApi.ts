@@ -1,8 +1,8 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {INews} from "../../models/INews";
-import {TagDescription} from "@reduxjs/toolkit/query";
+import type {INews} from "../../models/INews";
+import type {TagDescription} from "@reduxjs/toolkit/query";
 
 export const newsApi = createApi({
   reducerPath: 'newsApi',
@@ -48,7 +48,7 @@ export const newsApi = createApi({
     // GET /api/news/venue/<venue_pk> — venue news only (public)
     getVenueNews: builder.query<INews[], number>({
       query: (venueId) => `news/venue/${venueId}`,
-      providesTags: (result, error, venueId) =>
+      providesTags: (result, _error, venueId) =>
         result
           ? [
               ...result.map(({ id }) => ({ type: 'News' as const, id })),
@@ -60,7 +60,7 @@ export const newsApi = createApi({
     // GET /api/news/<pk> — news detail
     getNews: builder.query<INews, number>({
       query: (id) => `news/${id}`,
-      providesTags: (result, error, id) => [{ type: 'News', id }],
+      providesTags: (_result, _error, id) => [{ type: 'News', id }],
     }),
 
     // PUT /api/news/<pk> — update news (author/admin)
@@ -70,7 +70,7 @@ export const newsApi = createApi({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => {
+      invalidatesTags: (result, _error, { id }) => {
         const venueId = result?.venue?.id;
 
         const tags: TagDescription<'News' | 'GlobalNews' | 'VenueNews'>[] = [

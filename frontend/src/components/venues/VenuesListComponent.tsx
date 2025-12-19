@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useSearchVenuesQuery } from '../../redux/api/searchApi';
 import VenueCard from './VenueCard';
 import PaginationComponent from '../common/PaginationComponent';
-import {ISearchParams} from "../../models/ISearch";
+import type {ISearchParams} from "../../models/ISearch";
 
 const PAGE_SIZE = 12;
 

@@ -1,11 +1,12 @@
 
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout } from '../redux/slices/userSlice';
-import {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import type {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query";
+
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost/api/',
-  prepareHeaders: (headers, { getState }) => {
+  baseUrl: 'http://localhost:80/api/',
+  prepareHeaders: (headers, { }) => {
     const token = localStorage.getItem('access');
     if (token) {
       headers.set('authorization', `Bearer ${token}`);

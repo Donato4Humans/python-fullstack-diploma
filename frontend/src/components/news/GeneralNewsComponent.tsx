@@ -1,6 +1,6 @@
 
 import GeneralNewsCard from './GeneralNewsCard';
-import {INews} from "../../models/INews";
+import type {INews} from "../../models/INews";
 
 interface GeneralNewsComponentProps {
   news: INews[];

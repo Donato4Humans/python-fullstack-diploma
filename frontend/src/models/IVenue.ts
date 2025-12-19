@@ -1,5 +1,5 @@
-import {IVenueOwner} from "./IVenueOwner";
-import {IVenueTag} from "./ITag";
+import type {IVenueOwner} from "./IVenueOwner";
+import type {IVenueTag} from "./ITag";
 
 export interface IVenue {
   id: number;

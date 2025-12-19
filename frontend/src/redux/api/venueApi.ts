@@ -1,7 +1,7 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import {IVenue} from "../../models/IVenue";
+import type {IVenue} from "../../models/IVenue";
 
 
 export const venueApi = createApi({
@@ -24,10 +24,21 @@ export const venueApi = createApi({
           : [{ type: 'Venue', id: 'LIST' }],
     }),
 
+    getMyVenues: builder.query<IVenue[], void>({
+      query: () => 'venues/my',
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Venue' as const, id })),
+              { type: 'Venue' as const, id: 'MY_LIST' },
+            ]
+          : [{ type: 'Venue' as const, id: 'MY_LIST' }],
+    }),
+
     // GET /api/venues/<pk> — venue detail (public)
     getVenue: builder.query<IVenue, number>({
       query: (id) => `venues/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Venue', id }],
+      providesTags: (_result, _error, id) => [{ type: 'Venue', id }],
     }),
 
     // POST /api/venues — create venue (authenticated)
@@ -47,7 +58,7 @@ export const venueApi = createApi({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: 'Venue', id },
         { type: 'Venue', id: 'LIST' },
       ],
@@ -72,7 +83,7 @@ export const venueApi = createApi({
         method: 'PATCH',
         body: { new_owner_id },
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: 'Venue', id },
         { type: 'Venue', id: 'LIST' },
       ],
@@ -89,7 +100,7 @@ export const venueApi = createApi({
           body: formData,
         };
       },
-      invalidatesTags: (result, error, { id }) => [{ type: 'Venue', id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'Venue', id }],
     }),
 
     // GET /api/venues/inactive — list inactive venues (admin only)
@@ -118,6 +129,7 @@ export const venueApi = createApi({
 export const {
   useGetVenuesQuery,
   useGetVenueQuery,
+  useGetMyVenuesQuery,
   useCreateVenueMutation,
   useUpdateVenueMutation,
   useDeleteVenueMutation,
