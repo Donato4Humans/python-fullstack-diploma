@@ -16,7 +16,6 @@ class CommentSerializer(serializers.ModelSerializer):
         model = CommentModel
         fields = (
             'id',
-            # 'venue',
             'venue_title',
             'author',
             'author_name',

@@ -2,7 +2,6 @@ const baseURL = '/api'
 
 const auth = '/auth'
 const venues = '/venues'
-// const auto_salon = '/auto_salon'
 const admin = '/admin'
 
 const urls = {

@@ -32,11 +32,6 @@ class OwnersListCreateView(ListCreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
 
-        # if hasattr(user, 'venue_owners'):
-        #     raise ValidationError("You are already a owner!")
-        #
-        # owner = serializer.save(user=user)
-
         if user.is_superuser:
             # Superuser can create owner without user field
             serializer.save()  # ← no user needed
@@ -45,12 +40,6 @@ class OwnersListCreateView(ListCreateAPIView):
                 raise ValidationError("You are already a venue owner!")
             serializer.save(user=user)
             send_owner_create_email_task.delay(user.email, user.profile.name)
-
-        # if not hasattr(owner, 'base_account'):
-        #     BaseAccountModel.objects.create(owner=owner)
-
-
-
 
 
 class OwnersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
