@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IComment} from "../../models/IComment";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 export const commentApi = createApi({
   reducerPath: 'commentApi',
@@ -12,6 +13,7 @@ export const commentApi = createApi({
     // GET /api/comments/venue/<venue_pk> — visible comments (public)
     getVenueComments: builder.query<IComment[], number>({
       query: (venueId) => `comments/venue/${venueId}`,
+        transformResponse: transformListResponse,
       providesTags: (result= [], _error, venueId) =>
         result
           ? [
@@ -37,6 +39,7 @@ export const commentApi = createApi({
     // GET /api/comments/my — my visible comments (auth)
     getMyComments: builder.query<IComment[], void>({
       query: () => 'comments/my',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [...result.map(({ id }) => ({ type: 'Comment' as const, id })), 'Comment']
@@ -77,6 +80,7 @@ export const commentApi = createApi({
     // GET /api/comments/blocked — blocked comments (admin only)
     getBlockedComments: builder.query<IComment[], void>({
       query: () => 'comments/blocked',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [

@@ -3,6 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {INews} from "../../models/INews";
 import type {TagDescription} from "@reduxjs/toolkit/query";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 export const newsApi = createApi({
   reducerPath: 'newsApi',
@@ -13,6 +14,7 @@ export const newsApi = createApi({
     // GET /api/news — all news (global + venue) (public)
     getAllNews: builder.query<INews[], void>({
       query: () => 'news',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [
@@ -36,6 +38,7 @@ export const newsApi = createApi({
     // GET /api/news/global — global news only (public)
     getGlobalNews: builder.query<INews[], void>({
       query: () => 'news/global',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [
@@ -48,6 +51,7 @@ export const newsApi = createApi({
     // GET /api/news/venue/<venue_pk> — venue news only (public)
     getVenueNews: builder.query<INews[], number>({
       query: (venueId) => `news/venue/${venueId}`,
+        transformResponse: transformListResponse,
       providesTags: (result= [], _error, venueId) =>
         result
           ? [

@@ -1,8 +1,11 @@
 import type {IVenue} from "./IVenue";
 
 export interface ISearchResponse {
-  count: number;
-  results: IVenue[];
+  total_items: number;
+  total_pages: number;
+  prev: boolean;
+  next: boolean;
+  data: IVenue[];
 }
 
 export interface ISearchParams {

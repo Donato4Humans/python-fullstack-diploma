@@ -3,6 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IVenue} from "../../models/IVenue";
 import type {ISponsoredTop} from "../../models/ISponsoredTop";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 
 export const topApi = createApi({
@@ -24,30 +25,35 @@ export const topApi = createApi({
         url: 'top',
         params,
       }),
+        transformResponse: transformListResponse,
       providesTags: ['Top'],
     }),
 
     // GET /api/top/category/<category> — top 10 by category
     getTopByCategory: builder.query<IVenue[], string>({
       query: (category) => `top/category/${category}`,
+        transformResponse: transformListResponse,
       providesTags: ['Top'],
     }),
 
     // GET /api/top/tag/<tag_name> — top 10 by tag
     getTopByTag: builder.query<IVenue[], string>({
       query: (tag_name) => `top/tag/${tag_name}`,
+        transformResponse: transformListResponse,
       providesTags: ['Top'],
     }),
 
     // GET /api/top/sponsored — public sponsored top
     getSponsoredTop: builder.query<ISponsoredTop[], void>({
       query: () => 'top/sponsored',
+        transformResponse: transformListResponse,
       providesTags: ['SponsoredTop'],
     }),
 
     // GET /api/top/sponsored/admin — admin list
     getAdminSponsoredTop: builder.query<ISponsoredTop[], void>({
       query: () => 'top/sponsored/admin',
+        transformResponse: transformListResponse,
       providesTags: ['SponsoredTop'],
     }),
 

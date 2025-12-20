@@ -48,8 +48,7 @@ class MyReviewsListView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return ReviewModel.objects.filter(
-            author=user,
-            is_moderated=True  # only visible reviews
+            author=user
         ).select_related('venue').order_by('-created_at')
 
 class ReviewRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):

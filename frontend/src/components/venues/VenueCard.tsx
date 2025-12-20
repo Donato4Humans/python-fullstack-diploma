@@ -137,7 +137,7 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
           )}
 
           {/* Normal button */}
-          {!isOwnerView && (
+          {isOwnerView && (
             <Link
               to={`/venues/${venue.id}`}
               className="block w-full bg-blue-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-blue-700"

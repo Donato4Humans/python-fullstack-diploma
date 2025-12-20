@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IForbiddenWord} from "../../models/IForbiddenWord";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 
 export const forbiddenWordsApi = createApi({
@@ -13,6 +14,7 @@ export const forbiddenWordsApi = createApi({
     // GET /api/forbidden_words — list all forbidden words (admin only)
     getForbiddenWords: builder.query<IForbiddenWord[], void>({
       query: () => 'forbidden_words',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [

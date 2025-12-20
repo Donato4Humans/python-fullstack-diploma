@@ -3,6 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IPiyachokRequest} from "../../models/IPiyachokRequest";
 import type {IMatch} from "../../models/IMatch";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 export const piyachokApi = createApi({
   reducerPath: 'piyachokApi',
@@ -14,6 +15,7 @@ export const piyachokApi = createApi({
     // GET /api/piyachok/requests — my requests list
     getMyRequests: builder.query<IPiyachokRequest[], void>({
       query: () => 'piyachok/requests',
+        transformResponse: transformListResponse,
       providesTags: ['MyRequests'],
     }),
 
@@ -50,6 +52,7 @@ export const piyachokApi = createApi({
     // GET /api/piyachok/matches — my matches
     getMyMatches: builder.query<IMatch[], void>({
       query: () => 'piyachok/matches',
+        transformResponse: transformListResponse,
       providesTags: ['Match'],
     }),
 
@@ -65,12 +68,14 @@ export const piyachokApi = createApi({
     // GET /api/piyachok/active — all active requests (authenticated)
     getActiveRequests: builder.query<IPiyachokRequest[], void>({
       query: () => 'piyachok/active',
+        transformResponse: transformListResponse,
       providesTags: ['ActiveRequests'],
     }),
 
     // GET /api/piyachok/venue/<venue_pk> — active requests for specific venue
     getVenueRequests: builder.query<IPiyachokRequest[], number>({
       query: (venueId) => `piyachok/venue/${venueId}`,
+        transformResponse: transformListResponse,
       providesTags: (_result, _error, venueId) => [{ type: 'VenueRequests', id: venueId }],
     }),
 

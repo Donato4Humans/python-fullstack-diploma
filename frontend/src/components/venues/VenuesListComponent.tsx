@@ -74,17 +74,17 @@ const VenuesListComponent = () => {
 
   // Sort by distance client-side if needed
   const sortedVenues = useMemo(() => {
-    if (!data?.results || !coords || !sortByDistance ) {
-      return data?.results || [];
+    if (!data?.data || !coords || !sortByDistance ) {
+      return data?.data || [];
     }
 
-    return [...data.results].sort((a, b) => {
+    return [...data.data].sort((a, b) => {
       if (!a.latitude || !a.longitude || !b.latitude || !b.longitude) return 0;
       const distA = getDistance(coords.lat, coords.lng, a.latitude, a.longitude);
       const distB = getDistance(coords.lat, coords.lng, b.latitude, b.longitude);
       return distA - distB;
     });
-  }, [data?.results, coords, sortByDistance ]);
+  }, [data?.data, coords, sortByDistance ]);
 
   const total = sortedVenues.length;
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -101,9 +101,9 @@ const VenuesListComponent = () => {
     return <div className="text-center py-20 text-red-600">Error loading venues</div>;
   }
 
-  if (sortedVenues.length === 0) {
-    return <div className="text-center py-20 text-gray-600">No venues found</div>;
-  }
+  // if (sortedVenues.length === 0) {
+  //   return <div className="text-center py-20 text-gray-600">No venues found</div>;
+  // }
 
   return (
     <div>

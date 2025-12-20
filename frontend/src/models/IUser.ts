@@ -19,8 +19,8 @@ export interface IUser {
   is_active: boolean;
   is_critic: boolean;
   is_superuser: boolean;
-  status: 'blocked' | 'Blocked' | 'active' | 'Active';
-  last_login: string | null;
+  status: string;
+  last_login?: string | null;
   created_at: string;
   updated_at: string;
   profile: IProfile;

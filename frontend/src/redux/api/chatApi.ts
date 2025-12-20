@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IChatRoom, IChatRoomDetailResponse} from "../../models/IChat";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 
 
@@ -15,6 +16,7 @@ export const chatApi = createApi({
     // GET /api/chat — list user's chat rooms
     getChatRooms: builder.query<IChatRoom[], void>({
       query: () => 'chat',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [

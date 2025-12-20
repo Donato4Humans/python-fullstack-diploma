@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IReview} from "../../models/IReview";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 
 export const reviewApi = createApi({
@@ -13,6 +14,7 @@ export const reviewApi = createApi({
     // GET /api/review/venue/<venue_pk> — list reviews for venue (public)
     getVenueReviews: builder.query<IReview[], number>({
       query: (venueId) => `review/venue/${venueId}`,
+        transformResponse: transformListResponse,
       providesTags: (result= [], _error, venueId) =>
         result
           ? [
@@ -38,7 +40,8 @@ export const reviewApi = createApi({
     // GET /api/review/my — my reviews (auth)
     getMyReviews: builder.query<IReview[], void>({
       query: () => 'review/my',
-      providesTags: (result) =>
+        transformResponse: transformListResponse,
+      providesTags: (result= []) =>
         result
           ? [...result.map(({ id }) => ({ type: 'Review' as const, id })), 'Review']
           : ['Review'],

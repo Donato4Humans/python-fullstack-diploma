@@ -3,8 +3,9 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from core.tasks.send_create_critic_task import send_create_critic_task
@@ -134,3 +135,12 @@ class UserToCriticView(GenericAPIView):
         return Response({'message': f'User {user.profile.name} upgraded to critic.',
                          'user': serializer.data},
                         status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_current_user(request):
+    """
+        Returns the current authenticated user details.
+    """
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data, status=status.HTTP_200_OK)

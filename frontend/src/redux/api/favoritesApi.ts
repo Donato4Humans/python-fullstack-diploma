@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IFavorite} from "../../models/IFavorite";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 export const favoritesApi = createApi({
   reducerPath: 'favoritesApi',
@@ -12,6 +13,7 @@ export const favoritesApi = createApi({
     // GET /api/favorite — list user's favorites
     getFavorites: builder.query<IFavorite[], void>({
       query: () => 'favorite',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [

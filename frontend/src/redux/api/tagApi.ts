@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {ITag, IVenueTag} from "../../models/ITag";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 export const tagApi = createApi({
   reducerPath: 'tagApi',
@@ -15,6 +16,7 @@ export const tagApi = createApi({
         url: 'tags',
         params,
       }),
+        transformResponse: transformListResponse,
       providesTags: (result = []) =>
         result
           ? [
@@ -65,6 +67,7 @@ export const tagApi = createApi({
     // GET /api/tags/venue/<venue_pk> — list tags for venue (public)
     getVenueTags: builder.query<IVenueTag[], number>({
       query: (venueId) => `tags/venue/${venueId}`,
+        transformResponse: transformListResponse,
       providesTags: (result= [], _error, venueId) =>
         result
           ? [

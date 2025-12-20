@@ -1,16 +1,17 @@
 
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
-import type {IAuthResponse, ISignUpRequest} from '../../models/IAuth';
+import type { ISignUpRequest, ISignUpResponse} from '../../models/IAuth';
 import { setUser } from '../slices/userSlice';
 import type {IBlockUnblockRequest, IBlockUnblockResponse, IMakeCriticResponse, IUser} from "../../models/IUser";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: baseQueryWithReauth, tagTypes: ['User'],
   endpoints: (builder) => ({
 
-    signUp: builder.mutation<IAuthResponse, ISignUpRequest>({
+    signUp: builder.mutation<ISignUpResponse, ISignUpRequest>({
       query: (data) => ({
         url: 'user/registration',
         method: 'POST',
@@ -19,17 +20,23 @@ export const userApi = createApi({
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          localStorage.setItem('access', data.tokens.access);
-          localStorage.setItem('refresh', data.tokens.refresh);
-          dispatch(setUser(data.user));
+
+          dispatch(setUser(data));
         } catch (error) {
           console.error('Registration failed:', error);
         }
       },
     }),
 
+    getCurrentUser: builder.query<IUser, void>({
+      query: () => 'user/me',
+
+      providesTags: ['User'],
+    }),
+
     getUsers: builder.query<IUser[], void>({
       query: () => 'user',
+        transformResponse: transformListResponse,
       providesTags: ['User'],
     }),
 
@@ -81,6 +88,7 @@ export const userApi = createApi({
 export const {
       useGetUsersQuery,
       useSignUpMutation,
+      useGetCurrentUserQuery,
       useGetUserQuery,
       useUpdateUserMutation,
       useDeleteUserMutation,

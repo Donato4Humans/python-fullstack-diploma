@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IVenue} from "../../models/IVenue";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 
 export const venueApi = createApi({
@@ -15,17 +16,22 @@ export const venueApi = createApi({
         url: 'venues',
         params,
       }),
-      providesTags: (result= []) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: 'Venue' as const, id })),
-              { type: 'Venue', id: 'LIST' },
-            ]
-          : [{ type: 'Venue', id: 'LIST' }],
+      transformResponse: transformListResponse,
+      providesTags: (result=[], error) => {
+        if (error || !result) {
+          return [{ type: 'Venue', id: 'LIST' }];
+        }
+        const items = Array.isArray(result) ? result : [];
+        return [
+          ...items.map(({ id }) => ({ type: 'Venue' as const, id })),
+          { type: 'Venue', id: 'LIST' },
+        ];
+      },
     }),
 
     getMyVenues: builder.query<IVenue[], void>({
       query: () => 'venues/my',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [
@@ -106,6 +112,7 @@ export const venueApi = createApi({
     // GET /api/venues/inactive — list inactive venues (admin only)
     getInactiveVenues: builder.query<IVenue[], void>({
       query: () => 'venues/inactive',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [

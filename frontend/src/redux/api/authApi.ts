@@ -1,7 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import { setUser } from '../slices/userSlice';
-import type {IAuthResponse, ISignInRequest} from "../../models/IAuth";
+import type { ISignInRequest, ITokenResponse} from "../../models/IAuth";
+import {userApi} from "./userApi.ts";
 
 
 export const authApi = createApi({
@@ -9,7 +10,7 @@ export const authApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
 
-    signIn: builder.mutation<IAuthResponse, ISignInRequest>({
+    signIn: builder.mutation<ITokenResponse, ISignInRequest>({
       query: (credentials) => ({
         url: 'auth',
         method: 'POST',
@@ -18,9 +19,13 @@ export const authApi = createApi({
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          localStorage.setItem('access', data.tokens.access);
-          localStorage.setItem('refresh', data.tokens.refresh);
-          dispatch(setUser(data.user));
+          localStorage.setItem('access', data.access);
+          localStorage.setItem('refresh', data.refresh);
+
+          const userResult = await dispatch(
+            userApi.endpoints.getCurrentUser.initiate(undefined, { forceRefetch: true })
+            ).unwrap();
+          dispatch(setUser(userResult));
         } catch {}
       },
     }),

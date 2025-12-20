@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {ISearchParams, ISearchResponse} from "../../models/ISearch";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 export const searchApi = createApi({
   reducerPath: 'searchApi',
@@ -13,6 +14,7 @@ export const searchApi = createApi({
         url: 'search',
         params,
       }),
+        transformResponse: transformListResponse,
       providesTags: ['Search'],
     }),
   }),

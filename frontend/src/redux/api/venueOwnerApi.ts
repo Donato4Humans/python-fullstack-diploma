@@ -2,6 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../../helpers/api';
 import type {IVenueOwner} from "../../models/IVenueOwner";
+import {transformListResponse} from "../../helpers/transform.ts";
 
 
 export const venueOwnerApi = createApi({
@@ -13,6 +14,7 @@ export const venueOwnerApi = createApi({
     // GET /api/venue_owners — list owners (admin only)
     getVenueOwners: builder.query<IVenueOwner[], void>({
       query: () => 'venue_owners',
+        transformResponse: transformListResponse,
       providesTags: (result= []) =>
         result
           ? [
