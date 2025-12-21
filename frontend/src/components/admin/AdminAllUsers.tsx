@@ -28,11 +28,11 @@ const AdminAllUsers = () => {
     await makeCritic(userId);
   };
 
-  if (isLoading) return <p>Loading users...</p>;
+  if (isLoading) return <p>Завантаження користувачів...</p>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">All Users ({users.length})</h2>
+      <h2 className="text-2xl font-bold mb-6">Всі користувачі ({users.length})</h2>
       <div className="space-y-4">
         {users.map((user) => (
           <div key={user.id} className="bg-white p-6 rounded-xl shadow border flex justify-between items-center">
@@ -40,8 +40,8 @@ const AdminAllUsers = () => {
               <p className="font-semibold">{user.email}</p>
               <p className="text-sm text-gray-600">
                 {user.profile?.name} {user.profile?.surname} |
-                {user.is_superuser ? ' Superadmin' : user.is_critic ? ' Critic' : ' User'}
-                {user.is_active && ' | Blocked'}
+                {user.is_superuser ? ' Суперадмін' : user.is_critic ? ' Критик' : ' Користувач'}
+                {user.is_active && ' | Активний'}
               </p>
             </div>
             <div className="space-x-2">
@@ -51,21 +51,21 @@ const AdminAllUsers = () => {
                     onClick={() => handleBlockUnblock(user.id, user.is_active)}
                     className={`px-4 py-2 rounded text-white ${user.is_active ? 'bg-green-600' : 'bg-orange-600'}`}
                   >
-                    {user.is_active ? 'Unblock' : 'Block'}
+                    {user.is_active ? 'Заблокувати' : 'Розблокувати'}
                   </button>
                   {!user.is_critic && (
                     <button
                       onClick={() => handleMakeCritic(user.id)}
                       className="bg-purple-600 text-white px-4 py-2 rounded"
                     >
-                      Make Critic
+                      Зробити критиком
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete(user.id)}
                     className="bg-red-600 text-white px-4 py-2 rounded"
                   >
-                    Delete
+                    Видалити
                   </button>
                 </>
               )}

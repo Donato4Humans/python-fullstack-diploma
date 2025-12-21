@@ -19,7 +19,7 @@ interface CreateRequestForm {
 const PiyachokCreateForm = ({ onClose }: PiyachokCreateFormProps) => {
   // const navigate = useNavigate();
   const [createRequest] = useCreateRequestMutation();
-  const { data: venues = [] } = useGetVenuesQuery(undefined); // no limit — all venues
+  const { data: venues = [] } = useGetVenuesQuery(undefined);
 
   const { register, handleSubmit, reset } = useForm<CreateRequestForm>({
     defaultValues: {
@@ -35,18 +35,18 @@ const PiyachokCreateForm = ({ onClose }: PiyachokCreateFormProps) => {
       await createRequest(data).unwrap();
       reset();
       onClose();
-      alert('Request created! Check your profile.');
+      alert('Запит додано! Перевірте ваш профіль.');
     } catch (error) {
-      alert('Error creating request');
+      alert('Помилка створення запиту');
     }
   };
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-8">
-      <h2 className="text-2xl font-bold mb-6">Create New Request</h2>
+      <h2 className="text-2xl font-bold mb-6">Створити новий запит</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Budget (₴)</label>
+          <label className="block text-sm font-medium mb-2">Бюджет (₴)</label>
           <input
             type="number"
             {...register('budget', { required: true, min: 100 })}
@@ -55,27 +55,27 @@ const PiyachokCreateForm = ({ onClose }: PiyachokCreateFormProps) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Who pays</label>
+          <label className="block text-sm font-medium mb-2">Хто платить</label>
           <select {...register('who_pays')} className="w-full p-3 border border-gray-300 rounded-lg">
-            <option value="me">I pay</option>
-            <option value="them">They pay</option>
-            <option value="split">Split</option>
+            <option value="me">Я оплачую</option>
+            <option value="them">Вони оплачують</option>
+            <option value="split">Порівну</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Gender preference</label>
+          <label className="block text-sm font-medium mb-2">Бажана стать</label>
           <select {...register('gender_preference')} className="w-full p-3 border border-gray-300 rounded-lg">
-            <option value="A">Any</option>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
+            <option value="A">Будь-яка</option>
+            <option value="M">Чоловіча</option>
+            <option value="F">Жіноча</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Preferred venue (optional)</label>
+          <label className="block text-sm font-medium mb-2">Бажаний заклад (опціонально)</label>
           <select {...register('preferred_venue_id')} className="w-full p-3 border border-gray-300 rounded-lg">
-            <option value="">Any venue</option>
+            <option value="">Будь-який заклад</option>
             {venues.map((venue) => (
               <option key={venue.id} value={venue.id}>
                 {venue.title}
@@ -85,7 +85,7 @@ const PiyachokCreateForm = ({ onClose }: PiyachokCreateFormProps) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Note (optional)</label>
+          <label className="block text-sm font-medium mb-2">Повідомлення (опціонально)</label>
           <textarea
             {...register('note')}
             className="w-full p-3 border border-gray-300 rounded-lg"
@@ -98,14 +98,14 @@ const PiyachokCreateForm = ({ onClose }: PiyachokCreateFormProps) => {
             type="submit"
             className="flex-1 bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
           >
-            Create Request
+            Створити запит
           </button>
           <button
             type="button"
             onClick={onClose}
             className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition"
           >
-            Cancel
+            Скасувати
           </button>
         </div>
       </form>

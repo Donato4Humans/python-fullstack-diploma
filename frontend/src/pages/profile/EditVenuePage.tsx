@@ -34,7 +34,7 @@ const EditVenuePage = () => {
       setValue('house', venue.house);
     }
     if (venueTags) {
-      setSelectedTags(venueTags.map(vt => vt.tag_id));
+      setSelectedTags(venueTags.map(vt => vt.tag.id));
     }
   }, [venue, venueTags, setValue]);
 
@@ -43,12 +43,12 @@ const EditVenuePage = () => {
       await updateVenue({ id: venueIdNum, data }).unwrap();
 
       // Sync tags
-      const currentTagIds = venueTags.map(vt => vt.tag_id);
+      const currentTagIds = venueTags.map(vt => vt.tag.id);
       const toAdd = selectedTags.filter(id => !currentTagIds.includes(id));
       for (const tagId of toAdd) {
         await addTagToVenue({ venueId: venueIdNum, tag_id: tagId });
       }
-      // Note: remove tag not implemented here (add delete mutation if needed)
+      // remove tag not implemented here (add delete mutation later)
 
       navigate('/profile/my-venues');
     } catch (error) {
@@ -68,8 +68,7 @@ const EditVenuePage = () => {
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
       <h1 className="text-3xl font-bold mb-8">Edit Venue</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Same fields as CreateVenuePage */}
-        {/* ... title, category, description, etc. ... */}
+
 
         {/* Tags */}
         <div>

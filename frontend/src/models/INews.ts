@@ -4,12 +4,12 @@ export interface INews {
   id: number;
   title: string;
   content: string;
-  photo: string | null;
   type: string;
   is_paid: boolean;
-  venue: IVenue | null;
-  venue_id?: number | null;
-  venue_title: string | null;
+  photo?: string | null;
+  venue_id?: number | null; // only for request
+  venue_title?: string | null; // only response
+  venue?: IVenue | null; // only response
   created_at: string;
   updated_at: string;
 }

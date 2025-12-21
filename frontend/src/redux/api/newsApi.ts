@@ -26,11 +26,11 @@ export const newsApi = createApi({
     }),
 
     // POST /api/news — create news (auth)
-    createNews: builder.mutation<INews, Partial<INews>>({
-      query: (data) => ({
+    createNews: builder.mutation<INews, FormData>({
+      query: (formData) => ({
         url: 'news',
         method: 'POST',
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ['News', 'GlobalNews'],
     }),

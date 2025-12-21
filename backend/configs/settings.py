@@ -150,7 +150,7 @@ USE_TZ = True
 
 STATIC_URL = '/drf-static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = 'storage'
+MEDIA_ROOT = '/storage'
 MEDIA_URL = '/api/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

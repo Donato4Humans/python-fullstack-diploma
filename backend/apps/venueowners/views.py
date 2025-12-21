@@ -2,7 +2,7 @@
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from core.tasks.send_owner_create_email_task import send_owner_create_email_task
@@ -52,8 +52,12 @@ class OwnersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
     queryset = VenueOwnerModel.objects.all()
     serializer_class = OwnerSerializer
-    permission_classes = [IsOwnerOrAdmin]
     http_method_names = ['get', 'delete']
+    def get_permissions(self):
+        if self.request.method == 'DELETE':
+            return [IsAuthenticated(), IsOwnerOrAdmin()]
+        else:
+            return [AllowAny()]
 
     def delete(self, request, *args, **kwargs):
         owner = self.get_object()

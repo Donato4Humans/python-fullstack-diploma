@@ -22,14 +22,14 @@ const VenueNewsCard = ({ news }: { news: INews }) => {
           onClick={handleDelete}
           className="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700"
         >
-          Delete
+          Видалити
         </button>
       )}
       <Link to={`/news-general/${news.id}`} className="block">
         <h3 className="text-xl font-bold text-gray-900 mb-2">{news.title}</h3>
         <p className="text-gray-600 mb-4">{news.content.substring(0, 150)}...</p>
         {news.photo && (
-          <img src={news.photo} alt={news.title} className="w-full h-48 object-cover rounded-lg mb-4" />
+          <img src={news.photo || '/news_placeholder'} alt={news.title} className="w-full h-48 object-cover rounded-lg mb-4" />
         )}
         <span className="text-sm text-gray-500">
           {new Date(news.created_at).toLocaleDateString()}

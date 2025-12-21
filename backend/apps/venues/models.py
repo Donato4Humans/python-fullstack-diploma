@@ -23,7 +23,7 @@ class  VenueModel(BaseModel):
 
     title = models.CharField(max_length=35)
     schedule = models.CharField(max_length=250)
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=250, blank=True)
     category = models.CharField(max_length=10,
                               choices=CATEGORY_CHOICES,
                               default='mixed')
@@ -35,8 +35,8 @@ class  VenueModel(BaseModel):
     house = models.IntegerField(validators=[V.MinValueValidator(1)])
     street = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.STREET_VENUE.pattern, RegexEnum.STREET_VENUE.msg)])
     city = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.CITY_VENUE.pattern, RegexEnum.CITY_VENUE.msg)])
-    region = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.REGION_VENUE.pattern, RegexEnum.REGION_VENUE.msg)])
-    country = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.CITY_VENUE.pattern, RegexEnum.CITY_VENUE.msg)])
+    region = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.REGION_VENUE.pattern, RegexEnum.REGION_VENUE.msg)], blank=True)
+    country = models.CharField(max_length=35, validators=[V.RegexValidator(RegexEnum.CITY_VENUE.pattern, RegexEnum.CITY_VENUE.msg)], blank=True)
 
     average_check = models.IntegerField(validators=[V.MinValueValidator(1)])
     rating = models.FloatField(default=0)

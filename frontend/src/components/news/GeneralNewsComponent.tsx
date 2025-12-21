@@ -8,7 +8,7 @@ interface GeneralNewsComponentProps {
 
 const GeneralNewsComponent = ({ news }: GeneralNewsComponentProps) => {
   if (news.length === 0) {
-    return <div className="text-center py-8 text-gray-600">No global news available</div>;
+    return <div className="text-center py-8 text-gray-600">Немає загальних новин сайту</div>;
   }
 
   return (

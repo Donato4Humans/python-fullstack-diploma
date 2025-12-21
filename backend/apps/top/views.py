@@ -1,3 +1,4 @@
+from django.db import models
 
 from rest_framework.generics import ListAPIView, ListCreateAPIView
 from rest_framework.permissions import AllowAny
@@ -86,3 +87,10 @@ class SponsoredTopAdminView(ListCreateAPIView):
     queryset = SponsoredTopModel.objects.select_related('venue').all()
     serializer_class = SponsoredTopSerializer
     permission_classes = [IsAdminOrSuperUser]
+
+    def perform_create(self, serializer):
+        # Auto-assign next position if not provided (avoid unique conflicts)
+        if not serializer.validated_data.get('position'):
+            max_pos = SponsoredTopModel.objects.aggregate(models.Max('position'))['position__max'] or 0
+            serializer.validated_data['position'] = max_pos + 1
+        serializer.save()

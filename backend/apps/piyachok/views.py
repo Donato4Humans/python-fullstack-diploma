@@ -108,9 +108,9 @@ class ActiveRequestsListView(ListAPIView):
 
     def get_queryset(self):
         return PiyachokRequestModel.objects.filter(
-            status='pending',
-            venue__is_active=True,
-            venue__is_moderated=True
+            status='pending'
+            # preferred_venue__is_active=True,
+            # preferred_venue__is_moderated=True
         ).select_related('requester__profile', 'preferred_venue')
 
 

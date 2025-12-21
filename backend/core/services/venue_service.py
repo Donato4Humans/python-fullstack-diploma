@@ -6,7 +6,7 @@ from django.utils.timezone import now
 def update_venue_views(venue):
     today = now()
 
-    if hasattr(venue, 'seller') :
+    if hasattr(venue, 'owner') :
         venue.views += 1
 
         if venue.last_view_date and venue.last_view_date.date() == today.date():

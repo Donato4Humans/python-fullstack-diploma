@@ -23,12 +23,12 @@ const NewsDetailPage = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-4">{news.title}</h1>
           <div className="flex items-center gap-2 mb-4 text-sm text-gray-500">
             <span>{new Date(news.created_at).toLocaleDateString('en-US')}</span>
-            {news.venue && <span>· Venue: {news.venue_title}</span>}
-            {news.is_paid && <span className="text-yellow-600 font-medium">Sponsored</span>}
+            {news.venue && <span>· Заклад: {news.venue_title}</span>}
+            {news.is_paid && <span className="text-yellow-600 font-medium">Реклама</span>}
           </div>
           {news.photo && (
             <img
-              src={news.photo}
+              src={news.photo || '/news_placeholder'}
               alt={news.title}
               className="w-full h-64 object-cover rounded-lg mb-6"
             />

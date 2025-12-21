@@ -17,28 +17,27 @@ const MyMatchesPage = () => {
       // setChatRoom(result.chat_room); // if using MainLayout context
       // setShowChat(true); // if using MainLayout
       alert(`Match accepted! Chat room: ${result.chat_room}`);
-      // Or navigate to chat page if you have one
       navigate(`/chat/${result.chat_room}`);
     } catch (error) {
-      alert('Error accepting match');
+      alert('Помилка прийняття запиту');
     }
   };
 
   if (isLoading) {
-    return <div className="text-center py-20 text-gray-600">Loading matches...</div>;
+    return <div className="text-center py-20 text-gray-600">Завантаження прийнятих запитів...</div>;
   }
 
   return (
     <div className="space-y-6">
       {matches.map((match) => (
         <div key={match.id} className="bg-white rounded-xl p-6 shadow-md border">
-          <h3 className="text-xl font-bold mb-2">Match with {match.request1.requester.profile.name}</h3>
-          <p className="text-gray-600 mb-4">Suggested venue: {match.suggested_venue?.title}</p>
+          <h3 className="text-xl font-bold mb-2">Поєднатись {match.request1.requester.profile.name}</h3>
+          <p className="text-gray-600 mb-4">Запропонований заклад: {match.suggested_venue?.title}</p>
           <button
             onClick={() => handleAccept(match.id)}
             className="bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700"
           >
-            Accept Match
+            Прийняти запит
           </button>
         </div>
       ))}

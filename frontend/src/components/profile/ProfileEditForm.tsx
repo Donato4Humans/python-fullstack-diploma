@@ -1,12 +1,12 @@
-
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/rtk';
 import { useDeleteUserMutation, useUpdateUserMutation } from '../../redux/api/userApi';
 import { setUser, logout } from '../../redux/slices/userSlice';
-import type {IUser} from '../../models/IUser';
+import type { IUser } from '../../models/IUser';
 import DeleteAccountModal from './DeleteAccountModal';
+import {useForm} from "react-hook-form";
+import {useEffect} from "react";
 
 interface ProfileFormData {
   name: string;
@@ -22,12 +22,14 @@ interface ProfileFormData {
 
 const ProfileEditForm = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const isSuperuser = user?.is_superuser || false;
 
   const { handleSubmit, register, formState: { errors }, setValue } = useForm<ProfileFormData>({
     defaultValues: {
@@ -59,7 +61,6 @@ const ProfileEditForm = () => {
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
-      // Send only profile fields — no id
       const updateData = {
         profile: {
           name: data.name.trim(),
@@ -74,141 +75,191 @@ const ProfileEditForm = () => {
         },
       };
 
-      // Type is Partial<IUser> — profile is Partial<IProfile>
       const updatedUser = await updateUser({ id: user!.id, data: updateData as Partial<IUser> }).unwrap();
       dispatch(setUser(updatedUser));
-      setSuccessMsg('Profile updated successfully!');
+      setSuccessMsg('Профіль оновлено успішно!');
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (error) {
-      alert('Update failed');
+      alert('Оновлення не вдалось');
     }
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
   };
 
   const handleDeleteAccount = async () => {
     try {
       await deleteUser(user!.id).unwrap();
-      localStorage.removeItem('access');
-      localStorage.removeItem('refresh');
       dispatch(logout());
       navigate('/');
     } catch (error) {
-      alert('Delete failed');
+      alert('Видалення не вдалось');
     }
   };
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Left — Quick links */}
-      <div className="space-y-6">
-        <div className="bg-white p-6 rounded-xl shadow-md border">
-          <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-          <ul className="space-y-2">
-            <li><Link to="/profile/favorites" className="text-blue-600 hover:underline">Favorites</Link></li>
-            <li><Link to="/profile/comments" className="text-blue-600 hover:underline">My Comments</Link></li>
-            <li><Link to="/profile/reviews" className="text-blue-600 hover:underline">My Reviews</Link></li>
-            <li><Link to="/profile/matches" className="text-blue-600 hover:underline">My Matches</Link></li>
-            <li><Link to="/profile/my-venues" className="text-blue-600 hover:underline">My Venues</Link></li>
-            <li><Link to="/profile/security" className="text-blue-600 hover:underline">Security</Link></li>
-          </ul>
+  if (isSuperuser) {
+    return (
+      <div className="bg-white p-6 rounded-xl shadow-md border text-center">
+        <h3 className="text-xl font-semibold mb-4">Супер Адміністратор</h3>
+        <p className="text-gray-600 mb-6">
+          У супер адмінів немає профілю для редагування (ім'я, адреса тощо). <br />
+          Використовуйте меню для управління контентом.
+        </p>
+
+        {/* Quick actions for admin */}
+        <div className="space-y-4">
+          <Link
+            to="/profile/admin"
+            className="block w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700"
+          >
+            Перейти в адмін-панель
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full bg-gray-600 text-white py-3 rounded-lg font-semibold hover:bg-gray-700"
+          >
+            Вийти з акаунту
+          </button>
+          <button
+            onClick={() => setDeleteModalOpen(true)}
+            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700"
+          >
+            Видалити акаунт
+          </button>
         </div>
 
-        {/* Delete button */}
-        <button
-          onClick={() => setDeleteModalOpen(true)}
-          className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
-        >
-          Delete Account
-        </button>
-          <DeleteAccountModal
+        <DeleteAccountModal
           open={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
           onConfirm={handleDeleteAccount}
           isLoading={false}
-          />
+        />
       </div>
+    );
+  }
 
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Left — Quick links + Logout/Delete */}
+      <div className="space-y-6">
+        <div className="bg-white p-6 rounded-xl shadow-md border">
+          <h3 className="text-lg font-semibold mb-4">Швидкі дії</h3>
+          <ul className="space-y-2">
+            <li><Link to="/profile/favorites" className="text-blue-600 hover:underline">Обране</Link></li>
+            <li><Link to="/profile/comments" className="text-blue-600 hover:underline">Мої коментарі</Link></li>
+            <li><Link to="/profile/reviews" className="text-blue-600 hover:underline">Мої оцінки</Link></li>
+            <li><Link to="/profile/matches" className="text-blue-600 hover:underline">Мої схвалені запити</Link></li>
+            <li><Link to="/profile/my-venues" className="text-blue-600 hover:underline">Мої заклади</Link></li>
+            <li><Link to="/profile/security" className="text-blue-600 hover:underline">Безпека</Link></li>
+          </ul>
+        </div>
 
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="w-full bg-gray-600 text-white py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
+        >
+          Вийти з акаунту
+        </button>
+
+        {/* Delete Account Button */}
+        <button
+          onClick={() => setDeleteModalOpen(true)}
+          className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+        >
+          Видалити акаунт
+        </button>
+
+        <DeleteAccountModal
+          open={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onConfirm={handleDeleteAccount}
+          isLoading={false}
+        />
+      </div>
 
       {/* Right — Edit form */}
       <div className="bg-white p-6 rounded-xl shadow-md border">
-        <h3 className="text-lg font-semibold mb-4">Edit Profile</h3>
+        <h3 className="text-lg font-semibold mb-4">Редагувати профіль</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Name</label>
+            <label className="block text-sm font-medium mb-2">Ім'я</label>
             <input
-              {...register('name', { required: 'Name required' })}
-              className="w-full p-3 border rounded-lg"
+              {...register('name', { required: 'Ім\'я обов\'язкове' })}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.name && <p className="text-red-600 text-sm">{errors.name.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Surname</label>
+            <label className="block text-sm font-medium mb-2">Прізвище</label>
             <input
-              {...register('surname', { required: 'Surname required' })}
-              className="w-full p-3 border rounded-lg"
+              {...register('surname', { required: 'Прізвище обов\'язкове' })}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.surname && <p className="text-red-600 text-sm">{errors.surname.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Age</label>
+            <label className="block text-sm font-medium mb-2">Вік</label>
             <input
               type="number"
-              {...register('age', { required: 'Age required', min: 18 })}
-              className="w-full p-3 border rounded-lg"
+              {...register('age', { required: 'Вік обов\'язковий', min: { value: 18, message: 'Мінімум 18 років' } })}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.age && <p className="text-red-600 text-sm">{errors.age.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Gender</label>
-            <select {...register('gender', { required: 'Gender required' })} className="w-full p-3 border rounded-lg">
-              <option value="">Select</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+            <label className="block text-sm font-medium mb-2">Стать</label>
+            <select {...register('gender', { required: 'Стать обов\'язкова' })} className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Обрати</option>
+              <option value="male">Чоловіча</option>
+              <option value="female">Жіноча</option>
+              <option value="other">Інше</option>
             </select>
             {errors.gender && <p className="text-red-600 text-sm">{errors.gender.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Street</label>
+            <label className="block text-sm font-medium mb-2">Вулиця</label>
             <input
               {...register('street')}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">City</label>
+            <label className="block text-sm font-medium mb-2">Місто</label>
             <input
               {...register('city')}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Region</label>
+            <label className="block text-sm font-medium mb-2">Регіон</label>
             <input
               {...register('region')}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Country</label>
+            <label className="block text-sm font-medium mb-2">Країна</label>
             <input
               {...register('country')}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">House Number</label>
+            <label className="block text-sm font-medium mb-2">Номер будинку</label>
             <input
               type="number"
               {...register('house')}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
-            Save Changes
+            Зберегти зміни
           </button>
           {successMsg && <p className="text-green-600 text-sm text-center">{successMsg}</p>}
         </form>

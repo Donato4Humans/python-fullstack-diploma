@@ -11,7 +11,7 @@ class VenueSerializer(serializers.ModelSerializer):
     average_check = serializers.IntegerField()
     title = serializers.CharField()
     schedule = serializers.CharField()
-    # maybe lon/lat as must field
+
     favorite_count = serializers.SerializerMethodField()
     piyachok_request_count = serializers.SerializerMethodField()
 
@@ -84,8 +84,6 @@ class VenueSerializer(serializers.ModelSerializer):
 
         if not request:
             return data
-
-        # is_privileged = hasattr(instance.seller, 'premium_account')
 
         if not instance.owner.user.is_critic and not instance.owner.user.is_superuser:
             for field in [

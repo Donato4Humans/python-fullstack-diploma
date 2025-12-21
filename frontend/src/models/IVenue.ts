@@ -1,10 +1,9 @@
-import type {IVenueOwner} from "./IVenueOwner";
 import type {IVenueTag} from "./ITag";
 
 export interface IVenue {
   id: number;
   title: string;
-  description: string;
+  description?: string;
   schedule: string;
   average_check: number;
   rating: number;
@@ -13,10 +12,10 @@ export interface IVenue {
   house: number;
   street: string;
   city: string;
-  region: string;
-  country: string;
+  region?: string;
+  country?: string;
   category: 'cafe' | 'restaurant' | 'bar' | 'mixed';
-  owner: IVenueOwner;
+  owner: number;
   owner_id?: number;
   photo: string | null;
   venue_tags?: IVenueTag[];

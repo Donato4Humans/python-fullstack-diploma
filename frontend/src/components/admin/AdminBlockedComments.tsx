@@ -14,11 +14,11 @@ const AdminBlockedComments = () => {
     await deleteComment(id);
   };
 
-  if (isLoading) return <p>Loading blocked comments...</p>;
+  if (isLoading) return <p>Завантаження заблокованих коментарів...</p>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Blocked Comments ({comments.length})</h2>
+      <h2 className="text-2xl font-bold mb-6">Заблоковані коментарі ({comments.length})</h2>
       <div className="space-y-4">
         {comments.map((comment) => (
           <div key={comment.id} className="bg-white p-6 rounded-xl shadow border">
@@ -29,13 +29,13 @@ const AdminBlockedComments = () => {
                 onClick={() => handleApprove(comment.id)}
                 className="bg-green-600 text-white px-4 py-2 rounded"
               >
-                Approve
+                Схвалити
               </button>
               <button
                 onClick={() => handleDelete(comment.id)}
                 className="bg-red-600 text-white px-4 py-2 rounded"
               >
-                Delete
+                Видалити
               </button>
             </div>
           </div>

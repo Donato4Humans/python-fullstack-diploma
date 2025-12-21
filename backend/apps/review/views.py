@@ -24,7 +24,7 @@ class ReviewListCreateView(ListCreateAPIView):
 
     def get_queryset(self):
         venue_pk = self.kwargs['venue_pk']
-        return ReviewModel.objects.filter(venue_id=venue_pk, is_moderated=True).select_related('author__profile')
+        return ReviewModel.objects.filter(venue_id=venue_pk).select_related('author__profile')
 
     def perform_create(self, serializer):
         venue = VenueModel.objects.get(

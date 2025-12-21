@@ -7,7 +7,7 @@ export interface IReview {
   author: IUser;
   author_name: string;
   rating: number;
-  text: string;
+  text?: string;
   is_critic_review: boolean;
   created_at: string;
   updated_at: string;

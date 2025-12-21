@@ -26,6 +26,7 @@ import MyReviewsPage from '../pages/profile/MyReviewsPage';
 import ProfileSecurityPage from '../pages/profile/ProfileSecurityPage';
 import AdminPage from '../pages/profile/AdminPage';
 import RequireAuth from "../components/common/RequireAuth";
+import CreateNewsPage from "../pages/profile/CreateNewsPage.tsx";
 
 export const routes: RouteObject[] = [
     {
@@ -50,6 +51,7 @@ export const routes: RouteObject[] = [
                     { path: 'my-venues', element: <MyVenuesPage /> },
                     { path: 'create-venue', element: <CreateVenuePage /> },
                     { path: 'edit-venue/:venueId', element: <EditVenuePage /> },
+                    { path: 'create-venue-news/:venueId', element: <CreateNewsPage /> },
                     { path: 'favorites', element: <FavoritesPage /> },
                     { path: 'comments', element: <MyCommentsPage /> },
                     { path: 'reviews', element: <MyReviewsPage /> },

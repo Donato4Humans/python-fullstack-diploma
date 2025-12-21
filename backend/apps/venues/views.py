@@ -219,7 +219,7 @@ class ListInactiveVenueView(ListAPIView):
 
     serializer_class = VenueSerializer
     permission_classes = [IsAdminOrSuperUser]
-    queryset = VenueModel.objects.filter(is_active=False, is_moderated=False)
+    queryset = VenueModel.objects.filter( is_moderated=False)
     http_method_names = ['get']
 
 
@@ -230,6 +230,6 @@ class DeleteInactiveVenuesView(RetrieveUpdateDestroyAPIView):
     """
 
     serializer_class = VenueSerializer
-    queryset = VenueModel.objects.filter(is_active=False, is_moderated=False)
+    queryset = VenueModel.objects.filter( is_moderated=False)
     permission_classes = [IsAdminOrSuperUser]
     http_method_names = ['delete']

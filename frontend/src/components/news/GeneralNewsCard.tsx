@@ -10,14 +10,14 @@ const GeneralNewsCard = ({ news }: { news: INews }) => {
         <p className="text-gray-600 mb-4 line-clamp-3">{news.content}</p>
         {news.photo && (
           <img
-            src={news.photo}
+            src={news.photo || '/news_placeholder'}
             alt={news.title}
             className="w-full h-48 object-cover rounded-lg mb-4"
           />
         )}
         <div className="flex items-center justify-between text-sm text-gray-500">
           <span>{new Date(news.created_at).toLocaleDateString('en-US')}</span>
-          {news.is_paid && <span className="text-yellow-600 font-medium">Sponsored</span>}
+          {news.is_paid && <span className="text-yellow-600 font-medium">Реклама</span>}
         </div>
       </div>
     </Link>

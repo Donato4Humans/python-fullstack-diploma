@@ -16,28 +16,28 @@ const AdminForbiddenWords = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Delete word?')) {
+    if (confirm('Видалити слово?')) {
       await deleteWord(id);
     }
   };
 
-  if (isLoading) return <p>Loading forbidden words...</p>;
+  if (isLoading) return <p>Завантаження забороненої лексики...</p>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Forbidden Words ({words.length})</h2>
+      <h2 className="text-2xl font-bold mb-6">Заборонена лексика ({words.length})</h2>
 
       {/* Create */}
       <form onSubmit={handleSubmit(onCreate)} className="mb-8 p-6 bg-white rounded-xl shadow">
-        <h3 className="text-lg font-semibold mb-4">Add Word</h3>
+        <h3 className="text-lg font-semibold mb-4">Додати слово</h3>
         <div className="flex gap-4">
           <input
             {...register('word', { required: true })}
-            placeholder="Bad word"
+            placeholder="Заборонене слово"
             className="flex-1 p-3 border rounded-lg"
           />
           <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-lg">
-            Add
+            Додати
           </button>
         </div>
       </form>
@@ -51,7 +51,7 @@ const AdminForbiddenWords = () => {
               onClick={() => handleDelete(word.id)}
               className="bg-red-600 text-white px-4 py-2 rounded"
             >
-              Delete
+              Видалити
             </button>
           </div>
         ))}

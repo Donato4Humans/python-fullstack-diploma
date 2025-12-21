@@ -68,6 +68,11 @@ class NewsRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     serializer_class = NewsSerializer
     http_method_names = ['get', 'put', 'delete']
     permission_classes = [IsAuthenticated, IsNewsAuthorOrAdmin]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsNewsAuthorOrAdmin()]
+
 
     def get_queryset(self):
         return NewsModel.objects.select_related('venue')

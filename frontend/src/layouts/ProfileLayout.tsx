@@ -9,47 +9,47 @@ import {getUserRole} from "../helpers/getRole";
 const profileMenu = [
   {
     path: '/profile',
-    label: 'profile.menu.main', // visible to user
+    label: 'Профіль.Головна',
     roles: [RoleEnum.USER, RoleEnum.VENUE_ADMIN, RoleEnum.CRITIC, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/my-venues',
-    label: 'profile.menu.my_venues',
+    label: 'Мої заклади',
     roles: [RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/create-venue',
-    label: 'profile.menu.create_venue',
+    label: 'Створити заклад',
     roles: [RoleEnum.USER, RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/favorites',
-    label: 'profile.menu.favorites',
+    label: 'Улюблені заклади',
     roles: [RoleEnum.USER, RoleEnum.CRITIC, RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/comments',
-    label: 'profile.menu.comments',
+    label: 'Мої коментарі',
     roles: [RoleEnum.USER, RoleEnum.CRITIC, RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/reviews',
-    label: 'profile.menu.reviews',
+    label: 'Мої оцінки',
     roles: [RoleEnum.USER, RoleEnum.CRITIC, RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/matches',
-    label: 'profile.menu.matches',
+    label: 'Мої схвалені запити.Пиячок',
     roles: [RoleEnum.USER, RoleEnum.CRITIC, RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/security',
-    label: 'profile.menu.security',
+    label: 'Безпека.',
     roles: [RoleEnum.USER, RoleEnum.CRITIC, RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/admin',
-    label: 'profile.menu.admin',
+    label: 'Адмін панель',
     roles: [RoleEnum.SUPERADMIN],
   },
 ];

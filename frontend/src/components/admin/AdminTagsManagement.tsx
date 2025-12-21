@@ -16,28 +16,28 @@ const AdminTagsManagement = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Delete tag?')) {
+    if (confirm('Видалити тег?')) {
       await deleteTag(id);
     }
   };
 
-  if (isLoading) return <p>Loading tags...</p>;
+  if (isLoading) return <p>Завантаження тегів...</p>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Manage Tags</h2>
+      <h2 className="text-2xl font-bold mb-6">Керування тегами</h2>
 
       {/* Create form */}
       <form onSubmit={handleSubmit(onCreate)} className="mb-8 p-6 bg-white rounded-xl shadow">
-        <h3 className="text-lg font-semibold mb-4">Add New Tag</h3>
+        <h3 className="text-lg font-semibold mb-4">Додати новий тег</h3>
         <div className="flex gap-4">
           <input
             {...register('name', { required: true })}
-            placeholder="Tag name (e.g. wifi)"
+            placeholder="Назва тегу (наприклад wi-fi)"
             className="flex-1 p-3 border rounded-lg"
           />
           <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-lg">
-            Create
+            Додати
           </button>
         </div>
       </form>
@@ -51,7 +51,7 @@ const AdminTagsManagement = () => {
               onClick={() => handleDelete(tag.id)}
               className="bg-red-600 text-white px-4 py-2 rounded"
             >
-              Delete
+              Видалити
             </button>
           </div>
         ))}

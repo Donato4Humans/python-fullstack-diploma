@@ -19,7 +19,7 @@ const PiyachokPage = () => {
             onClick={() => setShowCreateForm(!showCreateForm)}
             className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xl py-4 px-8 rounded-xl transition"
           >
-            {showCreateForm ? 'Cancel' : 'Add new request'}
+            {showCreateForm ? 'Скасувати' : 'Додати новий запит'}
           </button>
         </div>
 

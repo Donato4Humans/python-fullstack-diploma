@@ -1,4 +1,3 @@
-import type {IVenue} from "./IVenue";
 
 export interface ITag {
   id: number;
@@ -9,10 +8,7 @@ export interface ITag {
 
 export interface IVenueTag {
   id: number;
-  venue: IVenue;
-  venue_id: number;
   tag: ITag;
-  tag_id: number;
   created_at: string;
   updated_at: string;
 }

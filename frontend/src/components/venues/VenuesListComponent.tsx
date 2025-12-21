@@ -50,7 +50,7 @@ const VenuesListComponent = () => {
   const [geoError, setGeoError] = useState<string | null>(null);
 
   // Check if user wants distance sorting (from search form)
-  const sortByDistance = searchParams.get('sort') === 'distance'; // we'll use 'sort' param
+  const sortByDistance = searchParams.get('sort') === 'distance';
 
   useEffect(() => {
     if (sortByDistance  && !coords && !geoError) {
@@ -74,17 +74,17 @@ const VenuesListComponent = () => {
 
   // Sort by distance client-side if needed
   const sortedVenues = useMemo(() => {
-    if (!data?.data || !coords || !sortByDistance ) {
-      return data?.data || [];
+    if (!data || !coords || !sortByDistance ) {
+      return data || [];
     }
 
-    return [...data.data].sort((a, b) => {
+    return [...data].sort((a, b) => {
       if (!a.latitude || !a.longitude || !b.latitude || !b.longitude) return 0;
       const distA = getDistance(coords.lat, coords.lng, a.latitude, a.longitude);
       const distB = getDistance(coords.lat, coords.lng, b.latitude, b.longitude);
       return distA - distB;
     });
-  }, [data?.data, coords, sortByDistance ]);
+  }, [data, coords, sortByDistance ]);
 
   const total = sortedVenues.length;
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -115,7 +115,7 @@ const VenuesListComponent = () => {
 
       {sortByDistance  && coords && (
         <div className="text-center text-gray-600 mb-6">
-          Sorted by distance from your location
+          Відсортовано за відстанню від вас
         </div>
       )}
 

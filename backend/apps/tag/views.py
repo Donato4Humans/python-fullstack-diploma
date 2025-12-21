@@ -25,7 +25,8 @@ class TagListCreateView(ListCreateAPIView):
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny()]
-        return [IsAdminOrSuperUser()]
+        else:
+            return [IsAdminOrSuperUser()]
 
 
 class TagRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
@@ -52,7 +53,12 @@ class VenueTagManagementView(ListCreateAPIView):
     """
     serializer_class = VenueTagSerializer
     http_method_names = ['get', 'post']
-    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        else:
+            return [IsAuthenticated(), IsOwnerOrAdmin()]
 
     def get_queryset(self):
         venue_pk = self.kwargs['venue_pk']

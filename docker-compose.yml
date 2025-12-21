@@ -4,6 +4,7 @@ services:
       context: .
     volumes:
       - ./backend:/app
+      - ./backend/storage:/storage
     env_file:
       - .env
     ports:
@@ -32,6 +33,7 @@ services:
       - ./client:/usr/share/nginx/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./backend/static:/usr/share/nginx/doc
+      - ./backend/storage:/storage
     depends_on:
       - app
 
