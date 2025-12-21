@@ -31,7 +31,7 @@ class ProfileModel(BaseModel):
 
     name = models.CharField(max_length=15, validators=[V.RegexValidator(RegexEnum.NAME.pattern, RegexEnum.NAME.msg)])
     surname = models.CharField(max_length=20,validators=[V.RegexValidator(RegexEnum.SURNAME.pattern, RegexEnum.SURNAME.msg)])
-    gender = models.CharField(max_length=8, validators=[V.RegexValidator(RegexEnum.GENDER.pattern, RegexEnum.GENDER.msg)])
+    gender = models.CharField(max_length=8)
     age = models.IntegerField(validators=[V.MinValueValidator(18)])
     house = models.IntegerField(validators=[V.MinValueValidator(1)])
     street = models.CharField(max_length=35,validators=[V.RegexValidator(RegexEnum.STREET.pattern, RegexEnum.STREET.msg)])

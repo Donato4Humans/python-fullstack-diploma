@@ -58,10 +58,10 @@ const CreateNewsPage: React.FC = () => {
       await createNews(submitData).unwrap();
       setSuccess(true);
 
-      // Auto-redirect after 2s
+      // Auto-redirect after 7s
       setTimeout(() => {
         navigate(`/venues/${venueId}`);
-      }, 2000);
+      }, 7000);
     } catch (err) {
       console.error('Не вдалось створити новину:', err);
     }

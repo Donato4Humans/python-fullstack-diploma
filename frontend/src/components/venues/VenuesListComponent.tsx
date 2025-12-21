@@ -63,7 +63,7 @@ const VenuesListComponent = () => {
           setGeoError(null);
         },
         () => {
-          setGeoError('Geolocation access denied. Cannot sort by distance.');
+          setGeoError('Доступ до геолокації заборонено. Неможливо сортувати за відстанню.');
         },
         { timeout: 10000 }
       );

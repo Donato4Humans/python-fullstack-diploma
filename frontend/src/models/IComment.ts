@@ -2,7 +2,8 @@ import type {IUser} from "./IUser";
 
 export interface IComment {
   id: number;
-  venue_title: string;
+  venue_title?: string;
+  venue_id: number;
   author: IUser;
   author_name: string;
   text: string;

@@ -29,8 +29,8 @@ export const piyachokApi = createApi({
       invalidatesTags: ['MyRequests', 'ActiveRequests'],
     }),
 
-    // GET /api/piyachok/requests/<pk> — my request detail
-    getMyRequest: builder.query<IPiyachokRequest, number>({
+    // GET /api/piyachok/requests/<pk> — request detail
+    getRequest: builder.query<IPiyachokRequest, number>({
       query: (id) => `piyachok/requests/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'MyRequests', id }],
     }),
@@ -105,7 +105,7 @@ export const piyachokApi = createApi({
 export const {
   useGetMyRequestsQuery,
   useCreateRequestMutation,
-  useGetMyRequestQuery,
+  useGetRequestQuery,
   useUpdateRequestMutation,
   useGetMyMatchesQuery,
   useAcceptMatchMutation,

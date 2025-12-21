@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HeartIcon, StarIcon } from '@heroicons/react/24/outline';
@@ -6,12 +5,12 @@ import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useAddFavoriteMutation, useGetFavoritesQuery, useRemoveFavoriteMutation } from '../../redux/api/favoritesApi';
 import { useAppSelector } from '../../hooks/rtk';
 import { useCreateCommentMutation } from '../../redux/api/commentApi';
-import type {IVenue} from '../../models/IVenue';
+import type { IVenue } from '../../models/IVenue';
 import ViewStatisticComponent from './ViewStatisticComponent';
-import type {IVenueTag} from "../../models/ITag";
-import {useCreateReviewMutation} from "../../redux/api/reviewApi";
-import {useGetVenueTagsQuery} from "../../redux/api/tagApi.ts";
-import {useGetVenueOwnerQuery} from "../../redux/api/venueOwnerApi.ts";
+import type { IVenueTag } from "../../models/ITag";
+import {useCreateReviewMutation, useGetMyReviewsQuery} from "../../redux/api/reviewApi";
+import { useGetVenueTagsQuery } from "../../redux/api/tagApi.ts";
+import { useGetVenueOwnerQuery } from "../../redux/api/venueOwnerApi.ts";
 import VenueReviewsComponent from "../reviews/VenueReviewsComponent.tsx";
 import VenueCommentsComponent from "../comments/VenueCommentsComponent.tsx";
 
@@ -28,8 +27,12 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
   const isFavorite = favorites.some((f) => f.venue_id === venue.id);
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
-  const {data : venue_tags = []} = useGetVenueTagsQuery(venue.id)
-  const {data : venue_owner} = useGetVenueOwnerQuery(venue.owner)
+  const { data: venue_tags = [] } = useGetVenueTagsQuery(venue.id);
+  const { data: venue_owner } = useGetVenueOwnerQuery(venue.owner);
+
+  // Fetch user's reviews to check if already reviewed this venue
+  const { data: myReviews = [] } = useGetMyReviewsQuery();
+  const hasReviewed = myReviews.some((r) => r.venue_title === venue.title);
 
   // Comment & Review
   const [commentText, setCommentText] = useState('');
@@ -88,7 +91,7 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
           {user && (
             <button
               onClick={handleFavorite}
-              className="absolute top-4 right-4 p-3 bg-white/90 rounded-full shadow-md hover:bg-white transition z-10"
+              className={`absolute top-4 right-4 p-3 bg-white/90 rounded-full shadow-md hover:bg-white transition z-10 ${isOwnerView ? 'top-12' : 'top-4'}`} // Move lower when isOwnerView
             >
               {isFavorite ? (
                 <HeartSolidIcon className="w-7 h-7 text-red-500" />
@@ -118,7 +121,7 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
             ))}
           </div>
 
-          {/* Owner buttons  */}
+          {/* Owner buttons */}
           {isOwnerView && (
             <div className="space-y-3 mt-6">
               <Link
@@ -159,9 +162,9 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
 
   // Detail mode
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-5xl mx-auto">
       {/* Photo */}
-      <div className="relative h-96 overflow-hidden"> {/* Increased height for better proportion */}
+      <div className="relative h-96 overflow-hidden">
         <img
           src={venue.photo || '/venue_placeholder.png'}
           alt={venue.title}
@@ -182,20 +185,27 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
       </div>
 
       {/* Info */}
-      <div className="p-10">
+      <div className="p-10 bg-gray-50">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">{venue.title}</h1>
-        <p className="text-2xl text-gray-600 mb-4">Тип закладу: {venue.category}</p>
+        <p className="text-2xl text-gray-700 mb-4">Тип закладу: {venue.category}</p>
         <div className="flex items-center gap-3 mb-6">
           <StarIcon className="w-8 h-8 text-yellow-400" />
-          <span className="text-3xl font-bold">{venue.rating}</span>
+          <span className="text-3xl font-bold text-gray-900">{venue.rating}</span>
           <span className="text-2xl font-semibold text-green-600 ml-4">
             Середній чек: {venue.average_check} ₴
           </span>
         </div>
         <p className="text-lg text-gray-700 mb-6 leading-relaxed">Опис закладу: {venue.description}</p>
-        <p className="text-base text-gray-500 mb-8">
+        <p className="text-base text-gray-600 mb-8">
           Адреса: {venue.street}, {venue.city}
         </p>
+
+        {/* Owner Contact */}
+        {venue_owner?.user?.email && (
+          <p className="text-lg text-gray-700 mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+            <strong>Контакти власника:</strong> {venue_owner.user.email}
+          </p>
+        )}
 
         {/* Tags */}
         <div className="flex flex-wrap gap-3 mb-10">
@@ -256,19 +266,19 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
 
         {/* Existing Comments */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-6">Існуючі коментарі</h3>
+          <h3 className="text-2xl font-bold mb-6 text-gray-900">Існуючі коментарі</h3>
           <VenueCommentsComponent venueId={venue.id} />
         </div>
 
         {/* Comment form */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-6">Додати коментар</h3>
+          <h3 className="text-2xl font-bold mb-6 text-gray-900">Додати коментар</h3>
           <form onSubmit={handleCommentSubmit} className="space-y-6">
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Ваш коментар..."
-              className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               rows={5}
             />
             <button type="submit" className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700">
@@ -279,33 +289,39 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
 
         {/* Existing Reviews */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-6">Існуючі відгуки</h3>
+          <h3 className="text-2xl font-bold mb-6 text-gray-900">Існуючі відгуки</h3>
           <VenueReviewsComponent venueId={venue.id} />
         </div>
 
-        {/* Review form */}
+       {/* Review form - Grayed out if already reviewed */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-6">Додати відгук</h3>
-          <form onSubmit={handleReviewSubmit} className="space-y-6">
-            <div>
-              <label className="block text-lg font-medium mb-3">Оцінка</label>
-              <select value={reviewRating} onChange={(e) => setReviewRating(Number(e.target.value))} className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <option key={n} value={n}>{n} ★</option>
-                ))}
-              </select>
+          <h3 className="text-2xl font-bold mb-6 text-gray-900">Додати відгук</h3>
+          {hasReviewed ? (
+            <div className="bg-gray-100 p-6 rounded-xl text-center text-gray-600 font-medium">
+              Ви вже залишили відгук для цього закладу
             </div>
-            <textarea
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              placeholder="Ваш відгук (необов'язково)..."
-              className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-              rows={5}
-            />
-            <button type="submit" className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700">
-              Підтвердити відгук
-            </button>
-          </form>
+          ) : (
+            <form onSubmit={handleReviewSubmit} className="space-y-6">
+              <div>
+                <label className="block text-lg font-medium mb-3 text-gray-800">Оцінка</label>
+                <select value={reviewRating} onChange={(e) => setReviewRating(Number(e.target.value))} className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <option key={n} value={n}>{n} ★</option>
+                  ))}
+                </select>
+              </div>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Ваш відгук (необов'язково)..."
+                className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
+                rows={5}
+              />
+              <button type="submit" className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700">
+                Підтвердити відгук
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>

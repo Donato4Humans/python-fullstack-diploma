@@ -15,7 +15,7 @@ const profileMenu = [
   {
     path: '/profile/my-venues',
     label: 'Мої заклади',
-    roles: [RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
+    roles: [RoleEnum.USER,RoleEnum.VENUE_ADMIN, RoleEnum.SUPERADMIN],
   },
   {
     path: '/profile/create-venue',
@@ -86,22 +86,22 @@ export default function ProfileLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="flex flex-col md:flex-row">
+    <div className="min-h-screen bg-gray-100 py-12">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="bg-white shadow-2xl rounded-2xl overflow-hidden">
+          <div className="flex flex-col lg:flex-row">
             {/* Left sidebar — menu */}
-            <aside className="w-full md:w-64 bg-gray-100 border-r border-gray-200">
-              <div className="p-6">
+            <aside className="w-full lg:w-80 bg-gray-50 border-r border-gray-200 lg:min-h-[calc(100vh-6rem)]">
+              <div className="p-8 lg:p-10">
                 {/* User info */}
-                <div className="text-center md:text-left mb-6">
-                  <div className="w-20 h-20 mx-auto md:mx-0 bg-gray-300 rounded-full flex items-center justify-center text-3xl font-bold text-gray-600">
+                <div className="text-center lg:text-left mb-10">
+                  <div className="w-24 h-24 mx-auto lg:mx-0 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-lg">
                     {user.profile?.name?.[0]?.toUpperCase() || 'U'}
                   </div>
-                  <h2 className="mt-3 text-xl font-semibold">
-                    {user.profile?.name || user.email}
+                  <h2 className="mt-4 text-2xl font-bold text-gray-900">
+                    {user.profile?.name || user.email.split('@')[0]}
                   </h2>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 mt-2 font-medium">
                     {role === RoleEnum.USER && 'Користувач'}
                     {role === RoleEnum.VENUE_ADMIN && 'Власник закладу'}
                     {role === RoleEnum.CRITIC && 'Критик'}
@@ -110,7 +110,7 @@ export default function ProfileLayout() {
                 </div>
 
                 {/* Navigation */}
-                <nav className="space-y-1">
+                <nav className="space-y-2">
                   {profileMenu
                     .filter((item) => item.roles.includes(role))
                     .map((item) => (
@@ -119,10 +119,10 @@ export default function ProfileLayout() {
                         to={item.path}
                         end
                         className={({ isActive }) =>
-                          `block w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                          `block w-full text-left px-6 py-4 rounded-xl transition-all font-medium text-lg ${
                             isActive
-                              ? 'bg-blue-600 text-white font-medium'
-                              : 'text-gray-700 hover:bg-gray-200'
+                              ? 'bg-blue-600 text-white shadow-md'
+                              : 'text-gray-700 hover:bg-gray-100 hover:shadow'
                           }`
                         }
                       >
@@ -133,8 +133,8 @@ export default function ProfileLayout() {
               </div>
             </aside>
 
-            {/* Right part — page content */}
-            <main className="flex-1 p-6 md:p-10">
+            {/* Right part — page content (wider) */}
+            <main className="flex-1 p-8 lg:p-12 bg-white">
               <RequireProfileRole>
                 <Outlet /> {/* Renders the selected profile page */}
               </RequireProfileRole>

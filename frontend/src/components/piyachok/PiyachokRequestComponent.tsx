@@ -92,6 +92,11 @@ const PiyachokRequestComponent = ({ request }: { request: IPiyachokRequest }) =>
         <p className="text-gray-700 mb-4 italic">{request.note}</p>
       )}
 
+      {/* Contact email (always shown) */}
+      <p className="text-sm text-gray-700 mb-6">
+        <strong>Контакти для зв'язку:</strong> {request.requester.email}
+      </p>
+
       <div className="flex gap-4">
         <button
           onClick={handleJoin}

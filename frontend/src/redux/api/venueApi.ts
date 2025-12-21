@@ -48,7 +48,7 @@ export const venueApi = createApi({
     }),
 
     // POST /api/venues — create venue (authenticated)
-    createVenue: builder.mutation<IVenue, Partial<IVenue>>({
+    createVenue: builder.mutation<IVenue, FormData>({
       query: (data) => ({
         url: 'venues',
         method: 'POST',
@@ -58,7 +58,7 @@ export const venueApi = createApi({
     }),
 
     // PUT /api/venues/<pk> — update venue (owner/admin)
-    updateVenue: builder.mutation<IVenue, { id: number; data: Partial<IVenue> }>({
+    updateVenue: builder.mutation<IVenue, { id: number; data: FormData }>({
       query: ({ id, data }) => ({
         url: `venues/${id}`,
         method: 'PUT',

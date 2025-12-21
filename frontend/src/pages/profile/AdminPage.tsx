@@ -1,5 +1,5 @@
+// AdminPage.tsx - Fixed text overflow in menu and no stretching
 import { useState } from 'react';
-// import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/rtk';
 import AdminPendingVenues from "../../components/admin/AdminPendingVenues";
 import AdminAllVenues from "../../components/admin/AdminAllVenues";
@@ -40,37 +40,37 @@ const AdminPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-12">
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-12 text-center tracking-tight">
           Панель Супер Адміна
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Sidebar Menu - Wider */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Sidebar Menu - Allow text wrap, no truncate */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-2xl shadow-xl p-8 sticky top-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-200">
+              <h2 className="text-2xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-200">
                 Меню Адміністратора
               </h2>
-              <nav className="space-y-4">
+              <nav className="space-y-3">
                 {menuItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => setActiveSection(item.id)}
-                    className={`w-full text-left px-8 py-5 rounded-xl font-semibold text-lg transition-all shadow-sm ${
+                    className={`w-full text-left px-6 py-4 rounded-xl font-medium text-base leading-tight transition-all ${
                       activeSection === item.id
                         ? 'bg-blue-600 text-white shadow-md'
                         : 'bg-gray-50 text-gray-800 hover:bg-gray-100 hover:shadow'
                     }`}
                   >
-                    {item.label}
+                    <span className="block">{item.label}</span>
                   </button>
                 ))}
               </nav>
             </div>
           </div>
 
-          {/* Main Content - Much Wider */}
+          {/* Main Content */}
           <div className="lg:col-span-9">
             <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
               {activeSection === 'dashboard' && (

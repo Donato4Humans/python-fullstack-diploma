@@ -2,7 +2,7 @@ import { StarIcon } from '@heroicons/react/24/solid';
 import type { IReview } from "../../models/IReview";
 
 const VenueReviewComponent = ({ review }: { review: IReview }) => {
-  const { author_name, rating, text, is_critic_review } = review;
+  const { author_name, rating, text, is_critic_review, venue_title } = review;
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
@@ -27,6 +27,13 @@ const VenueReviewComponent = ({ review }: { review: IReview }) => {
           <span className="text-base font-medium text-gray-700 ml-2">{rating}/5</span>
         </div>
       </div>
+
+      {/* Venue Title */}
+      {venue_title && (
+        <p className="text-lg font-semibold text-gray-800 mb-3">
+          Оцінка закладу: <span className="text-blue-600">{venue_title}</span>
+        </p>
+      )}
 
       {text ? (
         <p className="text-gray-800 leading-relaxed text-base">{text}</p>

@@ -5,8 +5,8 @@ import { useDeleteUserMutation, useUpdateUserMutation } from '../../redux/api/us
 import { setUser, logout } from '../../redux/slices/userSlice';
 import type { IUser } from '../../models/IUser';
 import DeleteAccountModal from './DeleteAccountModal';
-import {useForm} from "react-hook-form";
-import {useEffect} from "react";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 interface ProfileFormData {
   name: string;
@@ -24,40 +24,45 @@ const ProfileEditForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
+
+  // Early return if no user (prevents hook calls)
+  if (!user) {
+    return <div className="text-center py-12 text-gray-600">Завантаження профілю...</div>;
+  }
+
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [successMsg, setSuccessMsg] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  const isSuperuser = user?.is_superuser || false;
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { handleSubmit, register, formState: { errors }, setValue } = useForm<ProfileFormData>({
     defaultValues: {
-      name: user?.profile?.name || '',
-      surname: user?.profile?.surname || '',
-      age: user?.profile?.age || 0,
-      gender: user?.profile?.gender || '',
-      street: user?.profile?.street || '',
-      city: user?.profile?.city || '',
-      region: user?.profile?.region || '',
-      country: user?.profile?.country || '',
-      house: user?.profile?.house || 0,
+      name: user.profile?.name || '',
+      surname: user.profile?.surname || '',
+      age: user.profile?.age || 0,
+      gender: user.profile?.gender || '',
+      street: user.profile?.street || '',
+      city: user.profile?.city || '',
+      region: user.profile?.region || '',
+      country: user.profile?.country || '',
+      house: user.profile?.house || 0,
     },
   });
 
   useEffect(() => {
-    if (user) {
-      setValue('name', user.profile?.name || '');
-      setValue('surname', user.profile?.surname || '');
-      setValue('age', user.profile?.age || 0);
-      setValue('gender', user.profile?.gender || '');
-      setValue('street', user.profile?.street || '');
-      setValue('city', user.profile?.city || '');
-      setValue('region', user.profile?.region || '');
-      setValue('country', user.profile?.country || '');
-      setValue('house', user.profile?.house || 0);
-    }
+    setValue('name', user.profile?.name || '');
+    setValue('surname', user.profile?.surname || '');
+    setValue('age', user.profile?.age || 0);
+    setValue('gender', user.profile?.gender || '');
+    setValue('street', user.profile?.street || '');
+    setValue('city', user.profile?.city || '');
+    setValue('region', user.profile?.region || '');
+    setValue('country', user.profile?.country || '');
+    setValue('house', user.profile?.house || 0);
   }, [user, setValue]);
+
+  const isSuperuser = user.is_superuser || false;
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
@@ -75,25 +80,33 @@ const ProfileEditForm = () => {
         },
       };
 
-      const updatedUser = await updateUser({ id: user!.id, data: updateData as Partial<IUser> }).unwrap();
+      const updatedUser = await updateUser({ id: user.id, data: updateData as Partial<IUser> }).unwrap();
       dispatch(setUser(updatedUser));
       setSuccessMsg('Профіль оновлено успішно!');
-      setTimeout(() => setSuccessMsg(''), 3000);
+      setTimeout(() => setSuccessMsg(''), 5000);
     } catch (error) {
       alert('Оновлення не вдалось');
     }
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/');
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      dispatch(logout());
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Вихід не вдався', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const handleDeleteAccount = async () => {
     try {
-      await deleteUser(user!.id).unwrap();
+      await deleteUser(user.id).unwrap();
       dispatch(logout());
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (error) {
       alert('Видалення не вдалось');
     }
@@ -107,8 +120,6 @@ const ProfileEditForm = () => {
           У супер адмінів немає профілю для редагування (ім'я, адреса тощо). <br />
           Використовуйте меню для управління контентом.
         </p>
-
-        {/* Quick actions for admin */}
         <div className="space-y-4">
           <Link
             to="/profile/admin"
@@ -129,7 +140,6 @@ const ProfileEditForm = () => {
             Видалити акаунт
           </button>
         </div>
-
         <DeleteAccountModal
           open={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
@@ -142,7 +152,6 @@ const ProfileEditForm = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Left — Quick links + Logout/Delete */}
       <div className="space-y-6">
         <div className="bg-white p-6 rounded-xl shadow-md border">
           <h3 className="text-lg font-semibold mb-4">Швидкі дії</h3>
@@ -155,23 +164,18 @@ const ProfileEditForm = () => {
             <li><Link to="/profile/security" className="text-blue-600 hover:underline">Безпека</Link></li>
           </ul>
         </div>
-
-        {/* Logout Button */}
         <button
           onClick={handleLogout}
           className="w-full bg-gray-600 text-white py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
         >
           Вийти з акаунту
         </button>
-
-        {/* Delete Account Button */}
         <button
           onClick={() => setDeleteModalOpen(true)}
           className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
         >
           Видалити акаунт
         </button>
-
         <DeleteAccountModal
           open={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
@@ -179,8 +183,6 @@ const ProfileEditForm = () => {
           isLoading={false}
         />
       </div>
-
-      {/* Right — Edit form */}
       <div className="bg-white p-6 rounded-xl shadow-md border">
         <h3 className="text-lg font-semibold mb-4">Редагувати профіль</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

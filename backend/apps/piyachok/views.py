@@ -45,7 +45,7 @@ class PiyachokRequestDetailView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return PiyachokRequestModel.objects.filter(requester=self.request.user)
+        return PiyachokRequestModel.objects.filter(status='pending')
 
 
 class MyMatchesListView(ListAPIView):
@@ -138,6 +138,7 @@ class JoinRequestView(GenericAPIView):
             join someone else's request + instant match
     """
     permission_classes = [IsAuthenticated]
+    http_method_names = ['post']
 
     def post(self, request, pk):
         user = request.user
@@ -185,6 +186,7 @@ class JoinRequestView(GenericAPIView):
 
 class RunMatchingView(APIView):
     permission_classes = [IsAdminOrSuperUser]
+    http_method_names = ['post']
 
     def post(self, request):
         find_matches_task.delay()

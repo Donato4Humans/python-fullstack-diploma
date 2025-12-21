@@ -27,6 +27,7 @@ import ProfileSecurityPage from '../pages/profile/ProfileSecurityPage';
 import AdminPage from '../pages/profile/AdminPage';
 import RequireAuth from "../components/common/RequireAuth";
 import CreateNewsPage from "../pages/profile/CreateNewsPage.tsx";
+import RequestPiyachokPage from "../pages/piyachok/RequestPiyachokPage.tsx";
 
 export const routes: RouteObject[] = [
     {
@@ -38,6 +39,7 @@ export const routes: RouteObject[] = [
             { path: 'venues/:venueId', element: <VenuePage /> },
             { path: 'piyachok', element: <RequireAuth><PiyachokPage /></RequireAuth> },
             { path: 'piyachok/venue/:venueId', element: <RequireAuth><VenuePiyachokPage /></RequireAuth> },
+            { path: 'piyachok/requests/:requestId', element: <RequireAuth><RequestPiyachokPage /></RequireAuth> },
             { path: 'news-general', element: <NewsGeneralPage /> },
             { path: 'news-general/:newsId', element: <NewsDetailPage /> },
             { path: 'news-venues/:venueId', element: <NewsVenuePage /> },
