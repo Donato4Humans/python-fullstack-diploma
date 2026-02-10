@@ -43,7 +43,7 @@ Piyachok — це сучасний веб-додаток, який допома�
 1. Клонуйте репозиторій: git clone https://github.com/Donato4Humans/python-fullstack-diploma.git
 2. Перейти в кореневу директорію python-fullstack-diploma та створити .env файл(відправлю у Telegram) на основі .env.example
 3. cd frontend && npm install
-4. cd .. && docker compose up --build -d
+4. cd .. && docker compose up --build -d && docker compose up
 5. Перейти у браузері на http://localhost
 6. Авторизуватись на існуючого користувача(дані вказано вище) або зареєструвати нового
 7. Тестувати функціонал за допомогою інтерфейсу застосунку або Postman колекції(додам трохи пізніше)
@@ -103,7 +103,7 @@ The application emphasizes safety, minimalistic design, and a smooth user experi
    cd frontend && npm install
 
 4. Go back to the root and start Docker Compose:  
-   cd .. && docker compose up --build -d
+   cd .. && docker compose up --build -d && docker compose up
 
 5. Open in your browser:  
    http://localhost
