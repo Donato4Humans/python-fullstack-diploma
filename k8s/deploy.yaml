@@ -1,0 +1,209 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+type: Opaque
+data:
+  SECRET_KEY: J2RqYW5nby1pbnNlY3VyZS05NSs9ZCNyKCgocDM1M3N1PV45Yl5kNm45aXE0NjU2KTZibjkudW1hcCh3eGkn
+  DEBUG: VHJ1ZQ==
+  DB_HOST: ZXAtbm9pc3ktc2hhcGUtYTJsYW96anAtcG9vbGVyLmV1LWNlbnRyYWwtMS5hd3MubmVvbi50ZWNo
+  DB_PORT: NTQzMg==
+  DB_NAME: bmVvbmRi
+  DB_USER: bmVvbmRiX293bmVy
+  DB_PASSWORD: bnBnX25vM0dUeFBsdzFKeQ==
+  DB_SSL_MODE: cmVxdWlyZQ==
+  EMAIL_HOST: c210cC5nbWFpbC5jb20=
+  EMAIL_HOST_USER: Ym9kazMzNUBnbWFpbC5jb20=
+  EMAIL_HOST_PASSWORD: dXV4bXNyeHZ1bG13bnpkeg==
+  EMAIL_PORT: NTg3
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      name: app
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          image: donato3355/python-app:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: app-secrets
+          command:
+            - sh
+            - -c
+            - "python manage.py wait_db && python manage.py runserver 0.0.0.0:8000"
+#          volumeMounts:
+#            - mountPath: /storage
+#              name: storage
+#      volumes:
+#        - name: storage
+#          emptyDir: {}
+      restartPolicy: Always
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+spec:
+  selector:
+    app: app
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      name: web
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: donato3355/python-web:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: app-secrets
+#          volumeMounts:
+#            - mountPath: /storage
+#              name: storage
+#      volumes:
+#        - name: storage
+#          emptyDir: {}
+      restartPolicy: Always
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - protocol: TCP
+      port: 80
+  type: LoadBalancer
+  
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      name: redis
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+      restartPolicy: Always
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery
+  labels:
+    app: celery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery
+  template:
+    metadata:
+      name: celery
+      labels:
+        app: celery
+    spec:
+      containers:
+        - name: celery
+          image: donato3355/python-celery:1.0.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: app-secrets
+#          volumeMounts:
+#            - mountPath: /storage
+#              name: storage
+          command:
+            - celery
+            - -A
+            - configs
+            - worker
+            - -l
+            - info
+            - -B
+#      volumes:
+#        - name: storage
+#          emptyDir: {}
+      restartPolicy: Always

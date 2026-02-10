@@ -29,9 +29,8 @@ Piyachok — це сучасний веб-додаток, який допома�
 - Фронтенд: React + TypeScript, Tailwind CSS, React Hook Form, React Router v6
 - Управління станом: Redux Toolkit (RTK Query для API-запитів)
 - Бекенд: Django + Django REST Framework
-- База даних: PostgreSQL (ймовірно)
+- База даних: PostgreSQL 
 - Авторизація: JWT (токени access/refresh)
-- Розгортання: Не вказано (можливо Vercel/Netlify для фронтенду + Render/Heroku для бекенду)
 
 ### Функціонал за технічним завданням
 - Попередження про 18+ та безпеку при першому запуску
@@ -41,9 +40,13 @@ Piyachok — це сучасний веб-додаток, який допома�
 - Адаптивний та мобільно-дружній дизайн
 
 ### Як запустити
-1. Клонуйте репозиторій: `git clone https://github.com/yourusername/python-fullstack-diploma.git`
-2. Встановіть залежності: `npm install`
-3. Запустіть сервер розробки: `npm run dev`
+1. Клонуйте репозиторій: git clone https://github.com/Donato4Humans/python-fullstack-diploma.git
+2. Перейти в кореневу директорію python-fullstack-diploma та створити .env файл(відправлю у Telegram) на основі .env.example
+3. cd frontend && npm install
+4. cd .. && docker compose up --build -d
+5. Перейти у браузері на http://localhost
+6. Авторизуватись на існуючого користувача(дані вказано вище) або зареєструвати нового
+7. Тестувати функціонал за допомогою інтерфейсу застосунку або Postman колекції(додам трохи пізніше)
 
 ### Ліцензія
 ---
@@ -81,7 +84,6 @@ The application emphasizes safety, minimalistic design, and a smooth user experi
 - Backend: Django + Django REST Framework
 - Database: PostgreSQL (assumed)
 - Authentication: JWT (access/refresh tokens)
-- Deployment: Not specified (likely Vercel/Netlify for frontend + Render/Heroku for backend)
 
 ### Features from Technical Specification
 - Age verification and safety warnings on first launch
@@ -91,9 +93,24 @@ The application emphasizes safety, minimalistic design, and a smooth user experi
 - Responsive and mobile-friendly design
 
 ### How to Run
-1. Clone the repo: `git clone https://github.com/yourusername/python-fullstack-diploma.git`
-2. Install dependencies: `npm install`
-3. Run development server: `npm run dev`
+
+1. Clone the repository:  
+   git clone https://github.com/Donato4Humans/python-fullstack-diploma.git
+
+2. Go to the root directory python-fullstack-diploma and create a .env file (I will send it to you via Telegram) based on .env.example.
+
+3. Install frontend dependencies:  
+   cd frontend && npm install
+
+4. Go back to the root and start Docker Compose:  
+   cd .. && docker compose up --build -d
+
+5. Open in your browser:  
+   http://localhost
+
+6. Log in with an existing user (credentials provided above) or register a new one.
+
+7. Test the functionality using the application interface or the Postman collection (I will add it a bit later).
 
 
 API Documentation:
