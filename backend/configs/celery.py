@@ -13,6 +13,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
 'find-piyachok-matches-every-hour': {
         'task': 'core.tasks.piyachok_match_task.find_matches_task',
-        'schedule': crontab(minute=0, hour='*'),  # every hour
+        'schedule': crontab(minute=0, hour=0),  # every day
     },
 }
