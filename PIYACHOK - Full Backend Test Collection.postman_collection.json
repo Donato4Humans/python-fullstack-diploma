@@ -1,0 +1,3068 @@
+{
+  "info": {
+    "_postman_id": "4482a374-f7cd-4a5b-b804-6075fa7cd9d8",
+    "name": "PIYACHOK - Full Backend Test Collection",
+    "description": "Complete test collection for Piyachok diploma project - December 2025",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44510495",
+    "_collection_link": "https://go.postman.co/collection/44510495-4482a374-f7cd-4a5b-b804-6075fa7cd9d8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "authRegistration",
+      "item": [
+        {
+          "name": "auth",
+          "item": [
+            {
+              "name": "authLoginRecoveryActivate",
+              "item": [
+                {
+                  "name": "login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "res = pm.response.json();\r",
+                          "pm.environment.set(\"access\", res.access);\r",
+                          "pm.environment.set(\"refresh\", res.refresh);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "create superuser",
+                          "value": "",
+                          "type": "",
+                          "disabled": true
+                        },
+                        {
+                          "key": "email",
+                          "value": "bodk335@gmail.com",
+                          "type": "text",
+                          "uuid": "4d18b16f-b3b1-45dc-b8f9-de9925edc418",
+                          "description": "admin/venue owner/critic"
+                        },
+                        {
+                          "key": "password",
+                          "value": "admin",
+                          "type": "text",
+                          "uuid": "800ef083-e704-4668-a363-644235d99aed"
+                        },
+                        {
+                          "key": "email",
+                          "value": "donato.4work@gmail.com",
+                          "type": "text",
+                          "uuid": "6b063aa6-09b3-40d2-b2b4-f59e7dd330a7",
+                          "description": "venue owner",
+                          "disabled": true
+                        },
+                        {
+                          "key": "password",
+                          "value": "test",
+                          "type": "text",
+                          "uuid": "b4ccef02-79ee-4fed-8a54-cfea5761f4ce",
+                          "disabled": true
+                        },
+                        {
+                          "key": "email",
+                          "value": "gil591549@gmail.com",
+                          "description": "new user",
+                          "type": "text",
+                          "uuid": "a62cd261-0955-4945-87d6-a3e8b440ea13",
+                          "disabled": true
+                        },
+                        {
+                          "key": "password",
+                          "value": "test",
+                          "type": "text",
+                          "uuid": "d3441b0a-bdc4-464e-baa9-8e10c0a8685d",
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{host}}/auth",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "refresh",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "res = pm.response.json();\r",
+                          "pm.environment.set(\"refresh\", res.refresh);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{refresh}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "key": "refresh",
+                          "value": "{{refresh}}",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{host}}/auth/refresh",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "refresh"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "activateUserToken",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "{{host}}/auth/activate/{{paste activate token received from email and copied from URL here}}",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "activate",
+                        "{{paste activate token received from email and copied from URL here}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "recoveryRequest",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "raw": "{{host}}/auth/recovery",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "recovery"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "recoveryPassword",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "raw": "{{host}}/auth/recovery/",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "recovery",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "socketToken",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "res = pm.response.json()\r",
+                          "pm.environment.set(\"websocket_token\", res.token)"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{host}}/auth/socket",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "socket"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "venue-Share-SiteRole",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{host}}/auth/site_role",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "site_role"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "usersRegister",
+          "item": [
+            {
+              "name": "userRegister",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "res = pm.response.json();\r",
+                      "pm.environment.set(\"access\", res.access);\r",
+                      "pm.environment.set(\"refresh\", res.refresh);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"YOUR_REAL_EMAIL@gmail.com\",\r\n    \"password\": \"test\",\r\n    \"profile\": {\r\n        \"name\": \"Testname\",\r\n        \"surname\": \"Testsurname\",\r\n        \"age\": 18,\r\n        \"house\": 12,\r\n        \"street\": \"Teststreet\",\r\n        \"city\": \"Citytest\",\r\n        \"region\": \"Regiontest\",\r\n        \"country\": \"Countrytest\",\r\n        \"gender\": \"male\"\r\n    }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/user/registration",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "user",
+                    "registration"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "userToCritic/BlockUnblock",
+          "item": [
+            {
+              "name": "blockUnblockUser--Admin",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"action\": \"unblock\",\r\n    \"action\": \"block\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/user/block_unblock/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "user",
+                    "block_unblock",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "userToCritic",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/user/make_critic/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "user",
+                    "make_critic",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "usersList",
+          "item": [
+            {
+              "name": "getAllUsers-AccessAdmin",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/user",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "user"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getUserById",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/user/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "user",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "fullUpdateUser",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/user/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "user",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteUser",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/user/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "user",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ownersVenues",
+      "item": [
+        {
+          "name": "ownersList",
+          "item": [
+            {
+              "name": "getAllOwners--Admin",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venue_owners",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venue_owners"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "createOwner",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/venue_owners",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venue_owners"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getOwnersById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venue_owners/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venue_owners",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteOwnerById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/venue_owners/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venue_owners",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "venuesList",
+          "item": [
+            {
+              "name": "createVenue/AddPhoto",
+              "item": [
+                {
+                  "name": "createVenue",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"title\": \"McDonalds\",\r\n    \"schedule\": \"ПН-ПТ: 8-22\",\r\n    \"average_check\": 350, \r\n    \"house\" : 12,\r\n    \"street\": \"Govorova\",\r\n    \"country\": \"Ukraine\",\r\n    \"region\": \"Odesaoblast\",\r\n    \"city\": \"Odesa\",\r\n    \"description\": \"KUROCHKA\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{host}}/venues",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "venues"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "addPhotoToVenue",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "photo",
+                          "description": "add photo",
+                          "type": "file",
+                          "uuid": "438e0deb-92e2-4a1d-b7e9-cde198e33e25",
+                          "src": "/D:/Downloads/pizza_image.jpg"
+                        },
+                        {
+                          "key": "",
+                          "value": "",
+                          "type": "text",
+                          "uuid": "9390ac1b-0ff9-4d8b-b151-e1c900441c4e",
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{host}}/venues/photo/:id",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "venues",
+                        "photo",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "",
+                          "description": "add venue id"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "getAllVenues",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venues",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getVenueById",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venues/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "fullUpdateVenue",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/venues/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteVenueById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venues/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getUserOwnedVenues",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venues/my",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "my"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "transferVenueOwnership--Admin",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "new_owner_id",
+                      "value": "1",
+                      "description": "venue_owner id - NOT user id",
+                      "type": "text",
+                      "uuid": "921b8b03-dbca-412a-8325-2d5c7ee62066"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{host}}/venues/{{VENUE_ID}}/transfer",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "{{VENUE_ID}}",
+                    "transfer"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "inactiveVenues",
+          "item": [
+            {
+              "name": "getListInactiveVenues",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venues/inactive",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "inactive"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteInactiveVenues",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/venues/inactive/delete/:id",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "inactive",
+                    "delete",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VenueReviews",
+      "item": [
+        {
+          "name": "reviewListCreateById",
+          "item": [
+            {
+              "name": "getReviewsToVenue",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/review/venue/{{venue_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "review",
+                    "venue",
+                    "{{venue_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "addReviewToVenue",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"text\": \"best of the best\",\r\n    \"rating\": 5\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/review/venue/{{venue_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "review",
+                    "venue",
+                    "{{venue_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "reviewRetrieveUpdateDelete",
+          "item": [
+            {
+              "name": "getReviewById",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "{{host}}/review/{{review_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "review",
+                    "{{review_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "updateReviewById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "rating",
+                      "value": "4",
+                      "type": "text",
+                      "uuid": "53111766-a86f-48b9-9629-b446893e40ef",
+                      "disabled": true
+                    },
+                    {
+                      "key": "text",
+                      "value": "new_text",
+                      "type": "text",
+                      "uuid": "f5de2b8b-87b2-4160-a90a-3f6d9429cd65"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{host}}/review/{{review_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "review",
+                    "{{review_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteReviewById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/review/{{review_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "review",
+                    "{{review_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "userReviewsList",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/review/my",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "review",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "VenueComments",
+      "item": [
+        {
+          "name": "commentsRetrieveUpdateDelete",
+          "item": [
+            {
+              "name": "getCommentById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/comments/{{comment_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "comments",
+                    "{{comment_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "updateCommentById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/comments/{{comment_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "comments",
+                    "{{comment_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteCommentById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/comments/{{comment_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "comments",
+                    "{{comment_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "getCommentsToVenue",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/comments/venue/{{venue_id}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "comments",
+                "venue",
+                "{{venue_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addCommentToVenue",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"text\": \"test_comment\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/comments/venue/{{venue_id}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "comments",
+                "venue",
+                "{{venue_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUserComments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/comments/my",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "comments",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getBlockedComments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/comments/blocked",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "comments",
+                "blocked"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "News",
+      "item": [
+        {
+          "name": "newsRetrieveUpdateDelete",
+          "item": [
+            {
+              "name": "getNewsById",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/news/{{news_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "news",
+                    "{{news_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "updateNewsById(Admin/critic or venue owner)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "photo",
+                      "description": "change news photo",
+                      "type": "file",
+                      "uuid": "7505885f-c314-4f87-a8ff-8c752a60fc94",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "title",
+                      "value": "new_title",
+                      "type": "text",
+                      "uuid": "604d3759-267e-4228-80ad-58ff43dc31e6"
+                    },
+                    {
+                      "key": "content",
+                      "value": "new_content",
+                      "type": "text",
+                      "uuid": "e262907b-eb64-4494-8f63-c406ccb07cba"
+                    },
+                    {
+                      "key": "type",
+                      "value": "",
+                      "description": "general/promotion/event",
+                      "type": "text",
+                      "uuid": "f5b77ed2-c32a-461d-b241-e5a7665c2aa8",
+                      "disabled": true
+                    },
+                    {
+                      "key": "is_paid",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "ef72ece5-503a-4c6e-acb1-0559cf12813e",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{host}}/news/{{news_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "news",
+                    "{{news_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteNewsById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/news/{{news_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "news",
+                    "{{news_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "getAllNews(global+venue)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/news",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "news"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addNews(global for critic/admin or venue for owner)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"WELCOME VENUE\",\r\n    \"content\": \"TEST VENUE NEWS CONTENT\",\r\n    // UNCOMMENT venue_id FIELD TO ADD VENUE-SPECIFIC NEWS IF YOU OWN THAT VENUE\r\n    // \"venue_id\": 3,\r\n    \"type\": \"event\",\r\n    \"is_paid\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/news",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "news"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getGlobalNews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/news/global",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "news",
+                "global"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getNewsByVenueId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/news/venue/{{VENUE_ID}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "news",
+                "venue",
+                "{{VENUE_ID}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "searchByText/Tags/Rating",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/search/?tag=terrace&q=Mcd&category=mixed&min_price=300&min_rating=3",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "search",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tag",
+                  "value": "wi-fi",
+                  "disabled": true
+                },
+                {
+                  "key": "tag",
+                  "value": "terrace"
+                },
+                {
+                  "key": "q",
+                  "value": "KFC",
+                  "description": "just text search",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "Mcd",
+                  "description": "just text search"
+                },
+                {
+                  "key": "category",
+                  "value": "mixed"
+                },
+                {
+                  "key": "category",
+                  "value": "bar",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "order_by",
+                  "value": "rating",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "min_price",
+                  "value": "300"
+                },
+                {
+                  "key": "max_price",
+                  "value": "600",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "min_rating",
+                  "value": "3",
+                  "description": "rating from 0 to 5"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "CHECK SEARCH APP FILTER TO LEARN SEARCH ABILITIES"
+    },
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "tagListCreate",
+          "item": [
+            {
+              "name": "getAllTagsList",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/tags",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "tags"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "createTag--Admin",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"tag_name\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/tags",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "tags"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "tagRetrieveUpdateDelete--admin",
+          "item": [
+            {
+              "name": "getTagById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/tags/{{tag_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "tags",
+                    "{{tag_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "updateTagById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "changed_name",
+                      "type": "text",
+                      "uuid": "6b61c77c-62a2-4ee0-829e-3ab07bd87ada"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{host}}/tags/{{tag_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "tags",
+                    "{{tag_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "deleteTagById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/tags/{{tag_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "tags",
+                    "{{tag_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "venueTagsListCreate--owner only",
+          "item": [
+            {
+              "name": "addTagToVenue",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tag_id\": 2\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/tags/venue/{{VENUE_ID}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "tags",
+                    "venue",
+                    "{{VENUE_ID}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getVenueTagsById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/tags/venue/{{VENUE_ID}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "tags",
+                    "venue",
+                    "{{VENUE_ID}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Top",
+      "item": [
+        {
+          "name": "SponsoredTop--Admin",
+          "item": [
+            {
+              "name": "getSponsoredVenuesTop",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "{{host}}/top/sponsored/admin",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "top",
+                    "sponsored",
+                    "admin"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getSponsoredVenuesTop Copy",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"venue_id\": 8,\r\n    \"position\": 2\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/top/sponsored/admin",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "top",
+                    "sponsored",
+                    "admin"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "getVenuesTop(main flexible top)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{host}}/top/?order_by=-rating",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "top",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tag",
+                  "value": "wi-fi",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "KFC",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "Mcd",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "mixed",
+                  "disabled": true
+                },
+                {
+                  "key": "order_by",
+                  "value": "-rating"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getVenuesTopByCategory",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{host}}/top/category/{{bar/restaurant/cafe/mixed}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "top",
+                "category",
+                "{{bar/restaurant/cafe/mixed}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getVenuesTopByTag",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{host}}/top/tag/{{wi-fi/terrace/pet-friendly/other new added}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "top",
+                "tag",
+                "{{wi-fi/terrace/pet-friendly/other new added}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getSponsoredVenuesTop",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{host}}/top/sponsored",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "top",
+                "sponsored"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "FavoriteVenues",
+      "item": [
+        {
+          "name": "getUserFavoriteVenues",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/favorite",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "favorite"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addVenueToFavorite",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    // change venue_id to add other venue to favorite\r\n    \"venue_id\" : 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/favorite",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "favorite"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addVenueToFavorite Copy",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/favorite/{{VENUE_ID}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "favorite",
+                "{{VENUE_ID}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Piyachok(find company)",
+      "item": [
+        {
+          "name": "requestListCreate",
+          "item": [
+            {
+              "name": "getUserPiyachokRequests",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/piyachok/requests",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "piyachok",
+                    "requests"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "addPiyachokRequest",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"budget\": 500,\r\n    \"who_pays\": \"split\", // me|them|split\r\n    \"preferred_venue_id\": 3,\r\n    // \"gender_preference\": \"A\", // \"M\"/\"Male\"||\"F\"/\"Female\"||\"A\"/\"Any\" - optional field\r\n    \"note\": \"Looking for fun company!\" // optional field\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/piyachok/requests",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "piyachok",
+                    "requests"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "requestRetrieveUpdate",
+          "item": [
+            {
+              "name": "getPiyachokRequestById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{host}}/piyachok/requests/{{request_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "piyachok",
+                    "requests",
+                    "{{request_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "updatePiyachokRequestById(if pending)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"budget\": 500,\r\n    \"who_pays\": \"split\", // me|them|split\r\n    \"preferred_venue_id\": 3,\r\n    // \"gender_preference\": \"A\", // \"M\"/\"Male\"||\"F\"/\"Female\"||\"A\"/\"Any\" - optional field\r\n    \"note\": \"Looking for fun company!\" // optional field\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/piyachok/requests/{{request_id}}",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "piyachok",
+                    "requests",
+                    "{{request_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "getUserMatchedRequests",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/piyachok/matches",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "piyachok",
+                "matches"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "acceptMatchedRequest",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/piyachok/matches/{{MATCH_ID}}/accept",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "piyachok",
+                "matches",
+                "{{MATCH_ID}}",
+                "accept"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "joinPiyachokRequest + instant match",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/piyachok/join/{{request_id}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "piyachok",
+                "join",
+                "{{request_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAllActiveRequests(in pending status)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{host}}/piyachok/active",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "piyachok",
+                "active"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getVenueActiveRequests",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{host}}/piyachok/venue/{{venue_id}}",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "piyachok",
+                "venue",
+                "{{venue_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "forbiddenWords",
+      "item": [
+        {
+          "name": "createBadWords",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/forbidden_words",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "forbidden_words"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getListOfBadWords",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/forbidden_words",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "forbidden_words"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getBadWordsById",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/forbidden_words/:id",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "forbidden_words",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "fullUpdateBadWord",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/forbidden_words/:id",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "forbidden_words",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteBadWords",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/forbidden_words/:id",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "forbidden_words",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "chat(not fully implemented)",
+      "item": [
+        {
+          "name": "getAllChatRoomsList",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/chat",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "chat"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getChatRoomById",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/chat/:id",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "chat",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteMessageById",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/chat/messages/delete/:id",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "chat",
+                "messages",
+                "delete",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteChatRoomById",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/chat/delete/:id",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "chat",
+                "delete",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "host",
+      "value": "localhost/api",
+      "type": "string"
+    },
+    {
+      "key": "access",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "websocket_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

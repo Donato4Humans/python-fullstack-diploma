@@ -38,13 +38,16 @@ class ReviewSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
-        user = self.context['request'].user
-        venue = self.context['view'].kwargs.get('venue_pk')
-        if not venue:
-            raise serializers.ValidationError("Venue not specified")
+        # Only run validation on create
+        if self.instance is None:
+            user = self.context['request'].user
+            venue_pk = self.context['view'].kwargs.get('venue_pk')
 
-        # One review per user per venue
-        if ReviewModel.objects.filter(author=user, venue=venue).exists():
-            raise serializers.ValidationError("You have already reviewed this venue.")
+            if not venue_pk:
+                raise serializers.ValidationError("Venue not specified")
+
+            # One review per user per venue
+            if ReviewModel.objects.filter(author=user, venue_id=venue_pk).exists():
+                raise serializers.ValidationError("You have already reviewed this venue.")
 
         return attrs
