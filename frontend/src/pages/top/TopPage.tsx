@@ -7,7 +7,7 @@ const TopPage = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4">
         <h1 className="text-5xl font-bold text-gray-900 mb-12 text-center">
-          Top Venues
+          Кращі заклади
         </h1>
 
         {/* Sponsored */}

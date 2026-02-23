@@ -20,33 +20,42 @@ export const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
+  // Skip refresh logic for login endpoint
+  const isLoginRequest = typeof args === 'string'
+    ? args.includes('auth/sign-in')
+    : args.url.includes('auth/sign-in');
+
   let result = await baseQuery(args, api, extraOptions);
 
-  if (result.error && result.error.status === 401) {
-    // Try refresh
-    const refreshResult = await baseQuery(
-      {
-        url: 'auth/refresh',
-        method: 'POST',
-        body: { refresh: localStorage.getItem('refresh') },
-      },
-      api,
-      extraOptions
-    );
+  // Only handle 401 if it's NOT the login request
+  if (result.error && result.error.status === 401 && !isLoginRequest) {
+    const refreshToken = localStorage.getItem('refresh');
 
-    if (refreshResult.data) {
-      const { access, refresh } = refreshResult.data as { access: string; refresh: string };
-      localStorage.setItem('access', access);
-      localStorage.setItem('refresh', refresh);
+    if (refreshToken) {
+      const refreshResult = await baseQuery(
+        {
+          url: 'auth/refresh',
+          method: 'POST',
+          body: { refresh: refreshToken },
+        },
+        api,
+        extraOptions
+      );
 
-      // Retry original request
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      // Logout
-      localStorage.clear();
-      api.dispatch(logout());
-      window.location.href = '/auth/sign-in';
+      if (refreshResult.data) {
+        const { access, refresh } = refreshResult.data as { access: string; refresh: string };
+        localStorage.setItem('access', access);
+        localStorage.setItem('refresh', refresh);
+
+        result = await baseQuery(args, api, extraOptions);
+      } else {
+        // Refresh failed → real logout
+        localStorage.clear();
+        api.dispatch(logout());
+        // window.location.href = '/auth/sign-in';
+      }
     }
+    // If no refresh token and it's not login request → just return error (no redirect)
   }
 
   return result;

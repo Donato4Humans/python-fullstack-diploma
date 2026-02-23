@@ -6,7 +6,7 @@ import VenueCard from './VenueCard';
 import PaginationComponent from '../common/PaginationComponent';
 import type {ISearchParams} from "../../models/ISearch";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 1; // change to bigger for real use
 
 // Haversine formula — distance in km between two points
 const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -86,8 +86,7 @@ const VenuesListComponent = () => {
     });
   }, [data, coords, sortByDistance ]);
 
-  const total = sortedVenues.length;
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const totalPages = Math.ceil((sortedVenues.length || 0) / PAGE_SIZE);
   const paginatedVenues = sortedVenues.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
@@ -125,17 +124,10 @@ const VenuesListComponent = () => {
         ))}
       </div>
 
-      {totalPages > 1 && (
+      {totalPages >= 1 && (
         <PaginationComponent
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={(page) => {
-            const newParams = new URLSearchParams(searchParams);
-            newParams.set('page', String(page));
-            window.scrollTo(0, 0);
-            // update URL without reload
-            window.history.pushState({}, '', `/venues?${newParams.toString()}`);
-          }}
         />
       )}
     </div>

@@ -1,12 +1,23 @@
-
 import { useGetForbiddenWordsQuery, useCreateForbiddenWordMutation, useDeleteForbiddenWordMutation } from '../../redux/api/forbiddenWordsApi';
+import { useSearchParams } from "react-router-dom";
 import { useForm } from 'react-hook-form';
+import PaginationComponent from "../../components/common/PaginationComponent.tsx";
+
+const PAGE_SIZE = 1;
 
 const AdminForbiddenWords = () => {
   const { data: words = [], isLoading } = useGetForbiddenWordsQuery();
   const [createWord] = useCreateForbiddenWordMutation();
-  // const [updateWord] = useUpdateForbiddenWordMutation();
   const [deleteWord] = useDeleteForbiddenWordMutation();
+
+  const [searchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const totalPages = Math.ceil((words.length || 0) / PAGE_SIZE);
+  const paginatedWords = words.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   const { register, handleSubmit, reset } = useForm<{ word: string }>();
 
@@ -24,8 +35,10 @@ const AdminForbiddenWords = () => {
   if (isLoading) return <p>Завантаження забороненої лексики...</p>;
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6">Заборонена лексика ({words.length})</h2>
+    <div className="space-y-10">
+      <h2 className="text-2xl font-bold mb-6">
+        Заборонена лексика ({words.length})
+      </h2>
 
       {/* Create */}
       <form onSubmit={handleSubmit(onCreate)} className="mb-8 p-6 bg-white rounded-xl shadow">
@@ -44,7 +57,7 @@ const AdminForbiddenWords = () => {
 
       {/* List */}
       <div className="space-y-4">
-        {words.map((word) => (
+        {paginatedWords.map((word) => (
           <div key={word.id} className="bg-white p-6 rounded-xl shadow flex justify-between items-center">
             <span className="font-medium">{word.word}</span>
             <button
@@ -55,6 +68,14 @@ const AdminForbiddenWords = () => {
             </button>
           </div>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="pt-10 flex justify-center">
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

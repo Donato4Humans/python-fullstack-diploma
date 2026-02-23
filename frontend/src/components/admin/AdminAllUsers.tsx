@@ -1,5 +1,8 @@
-
 import { useGetUsersQuery, useDeleteUserMutation, useBlockUnblockUserMutation, useMakeCriticMutation } from '../../redux/api/userApi';
+import { useSearchParams } from "react-router-dom";
+import PaginationComponent from "../../components/common/PaginationComponent.tsx";
+
+const PAGE_SIZE = 3;
 
 const AdminAllUsers = () => {
   const { data: users = [], isLoading } = useGetUsersQuery();
@@ -7,18 +10,27 @@ const AdminAllUsers = () => {
   const [blockUnblockUser] = useBlockUnblockUserMutation();
   const [makeCritic] = useMakeCriticMutation();
 
+  const [searchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const totalPages = Math.ceil((users.length || 0) / PAGE_SIZE);
+  const paginatedUsers = users.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
   const handleDelete = async (userId: number) => {
-    if (confirm('Delete user?')) {
+    if (confirm('Видалити користувача?')) {
       await deleteUser(userId);
     }
   };
 
   const handleBlockUnblock = async (userId: number, isBlocked: boolean) => {
-    let action : 'block' | 'unblock'
-    if(isBlocked){
-        action = 'unblock'
-    }else{
-        action = 'block'
+    let action: 'block' | 'unblock';
+    if (isBlocked) {
+      action = 'unblock';
+    } else {
+      action = 'block';
     }
 
     await blockUnblockUser({ id: userId, data: { action: action } });
@@ -33,8 +45,9 @@ const AdminAllUsers = () => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Всі користувачі ({users.length})</h2>
+
       <div className="space-y-4">
-        {users.map((user) => (
+        {paginatedUsers.map((user) => (
           <div key={user.id} className="bg-white p-6 rounded-xl shadow border flex justify-between items-center">
             <div>
               <p className="font-semibold">{user.email}</p>
@@ -72,6 +85,14 @@ const AdminAllUsers = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination  */}
+      <div className="pt-10 flex justify-center">
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

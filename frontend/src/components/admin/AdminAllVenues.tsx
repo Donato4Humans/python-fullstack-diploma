@@ -1,9 +1,12 @@
-import {useDeleteVenueMutation, useGetVenuesQuery, useTransferVenueOwnershipMutation} from '../../redux/api/venueApi';
+import { useGetVenuesQuery, useDeleteVenueMutation, useTransferVenueOwnershipMutation } from '../../redux/api/venueApi';
 import VenueCard from '../venues/VenueCard';
-import {Link} from 'react-router-dom';
-import {getUserRole} from "../../helpers/getRole";
-import {useAppSelector} from "../../hooks/rtk";
-import {RoleEnum} from "../../enums/RoleEnum";
+import { Link, useSearchParams } from 'react-router-dom';
+import { getUserRole } from "../../helpers/getRole";
+import { useAppSelector } from "../../hooks/rtk";
+import { RoleEnum } from "../../enums/RoleEnum";
+import PaginationComponent from "../../components/common/PaginationComponent.tsx";
+
+const PAGE_SIZE = 1;
 
 const AdminAllVenues = () => {
   const { user } = useAppSelector((state) => state.user);
@@ -11,25 +14,37 @@ const AdminAllVenues = () => {
   const [deleteVenue] = useDeleteVenueMutation();
   const [transferVenueOwnership] = useTransferVenueOwnershipMutation();
 
+  const [searchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const totalPages = Math.ceil((venues.length || 0) / PAGE_SIZE);
+  const paginatedVenues = venues.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
   const handleDelete = async (venueId: number) => {
     if (confirm('Видалити заклад ?')) {
       await deleteVenue(venueId);
     }
   };
 
-  let isSuperAdmin : boolean = false
+  let isSuperAdmin: boolean = false;
   const role = getUserRole(user);
-  if(role === RoleEnum.SUPERADMIN){
-      isSuperAdmin = true;
+  if (role === RoleEnum.SUPERADMIN) {
+    isSuperAdmin = true;
   }
 
   if (isLoading) return <p>Завантаження всіх закладів...</p>;
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6">Всі заклади ({venues.length})</h2>
+    <div className="space-y-10">
+      <h2 className="text-2xl font-bold mb-6">
+        Всі заклади ({venues.length})
+      </h2>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {venues.map((venue) => (
+        {paginatedVenues.map((venue) => (
           <div key={venue.id} className="relative">
             <VenueCard venue={venue} mode="grid" />
             <div className="absolute top-2 right-2 space-x-2">
@@ -46,23 +61,30 @@ const AdminAllVenues = () => {
                 Видалити
               </button>
 
-                {isSuperAdmin && (
-                  <button
-                    onClick={() => {
-                      const newOwnerId = prompt('Enter new owner user ID:');
-                      if (newOwnerId) {
-                        transferVenueOwnership({ id: venue.id, new_owner_id: Number(newOwnerId) });
-                      }
-                    }}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded text-sm"
-                  >
-                    Змінити власника
-                  </button>
-                )}
-
+              {isSuperAdmin && (
+                <button
+                  onClick={() => {
+                    const newOwnerId = prompt('Enter new owner user ID:');
+                    if (newOwnerId) {
+                      transferVenueOwnership({ id: venue.id, new_owner_id: Number(newOwnerId) });
+                    }
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded text-sm"
+                >
+                  Змінити власника
+                </button>
+              )}
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination - minimal styling */}
+      <div className="pt-10 flex justify-center">
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

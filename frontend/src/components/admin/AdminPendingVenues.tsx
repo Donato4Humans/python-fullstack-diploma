@@ -1,10 +1,22 @@
-// AdminPendingVenues.tsx - Fixed stretching and overlaps
 import { useGetInactiveVenuesQuery, useUpdateVenueMutation } from '../../redux/api/venueApi';
 import VenueCard from '../venues/VenueCard';
+import { useSearchParams } from "react-router-dom";
+import PaginationComponent from "../../components/common/PaginationComponent.tsx";
+
+const PAGE_SIZE = 1;
 
 const AdminPendingVenues = () => {
   const { data: venues = [], isLoading } = useGetInactiveVenuesQuery();
   const [updateVenue] = useUpdateVenueMutation();
+
+  const [searchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const totalPages = Math.ceil((venues.length || 0) / PAGE_SIZE);
+  const paginatedVenues = venues.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   const handleApprove = async (venueId: number) => {
     const formData = new FormData();
@@ -19,28 +31,39 @@ const AdminPendingVenues = () => {
       <h2 className="text-3xl font-extrabold mb-10 text-gray-900 text-center">
         Заклади на модерації ({venues.length})
       </h2>
+
       {venues.length === 0 ? (
         <p className="text-center py-12 text-gray-500 text-lg font-medium">
           Немає закладів на модерації
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {venues.map((venue) => (
-            <div key={venue.id} className="flex flex-col bg-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
-              <div className="flex-1">
-                <VenueCard venue={venue} mode="grid" />
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {paginatedVenues.map((venue) => (
+              <div key={venue.id} className="flex flex-col bg-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <div className="flex-1">
+                  <VenueCard venue={venue} mode="grid" />
+                </div>
+                <div className="p-4 bg-white rounded-b-2xl">
+                  <button
+                    onClick={() => handleApprove(venue.id)}
+                    className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition shadow-lg"
+                  >
+                    Схвалити публікацію
+                  </button>
+                </div>
               </div>
-              <div className="p-4 bg-white rounded-b-2xl">
-                <button
-                  onClick={() => handleApprove(venue.id)}
-                  className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition shadow-lg"
-                >
-                  Схвалити публікацію
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {/* Pagination - minimal change, centered with breathing room */}
+          <div className="pt-10 flex justify-center">
+            <PaginationComponent
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
+          </div>
+        </>
       )}
     </div>
   );

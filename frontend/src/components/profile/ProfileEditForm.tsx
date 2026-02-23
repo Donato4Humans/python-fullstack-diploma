@@ -25,16 +25,23 @@ const ProfileEditForm = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
 
-  // Early return if no user (prevents hook calls)
-  if (!user) {
-    return <div className="text-center py-12 text-gray-600">Завантаження профілю...</div>;
-  }
-
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [successMsg, setSuccessMsg] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Force redirect when user becomes null (after logout)
+  useEffect(() => {
+    if (!user) {
+      window.location.href = 'auth/sign-in'; // Hard redirect for logout
+    }
+  }, [user]);
+
+  // Early return if no user
+  if (!user) {
+    return <div className="text-center py-12 text-gray-600">Завантаження профілю...</div>;
+  }
 
   const { handleSubmit, register, formState: { errors }, setValue } = useForm<ProfileFormData>({
     defaultValues: {
@@ -92,9 +99,11 @@ const ProfileEditForm = () => {
   const handleLogout = async () => {
     if (isLoggingOut) return;
     setIsLoggingOut(true);
+
     try {
-      dispatch(logout());
-      navigate('/', { replace: true });
+      localStorage.clear();        // Clear tokens
+      dispatch(logout());          // Clear Redux state
+      window.location.href = 'auth/sign-in';  // Hard redirect
     } catch (error) {
       console.error('Вихід не вдався', error);
     } finally {

@@ -4,6 +4,7 @@ import { useGetTopVenuesQuery} from '../../redux/api/topApi';
 import VenueCard from '../venues/VenueCard';
 import {useGetTagsQuery} from "../../redux/api/tagApi";
 import {useSearchParams} from "react-router-dom";
+import PaginationComponent from "../common/PaginationComponent.tsx";
 
 interface GeneralTopComponentProps {}
 
@@ -14,6 +15,8 @@ type TopQueryParams = {
   max_rating?: number;
   order_by?: 'rating' | 'views' | 'daily_views' | 'newest';
 };
+
+const PAGE_SIZE = 1;
 
 const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -151,7 +154,7 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
   // Add this state for validation error (new)
     const [ratingError, setRatingError] = useState<string | null>(null);
 
-    // Validate ratings whenever they change (add this useEffect)
+    // Validate ratings whenever they change
     useEffect(() => {
       if (minRating !== '' && maxRating !== '') {
         const min = Number(minRating);
@@ -169,14 +172,21 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
       }
     }, [minRating, maxRating]);
 
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const totalPages = Math.ceil((venues.length || 0) / PAGE_SIZE);
+  const paginatedVenues = venues.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
   if (isLoading || tagsLoading) {
-    return <div className="text-center py-12 text-gray-600">Loading top venues...</div>;
+    return <div className="text-center py-12 text-gray-600">Завантажуємо кращі заклади...</div>;
   }
 
   if (isError) {
     return (
       <div className="text-center py-12 text-red-600">
-        Error loading top venues: {error ? (error as any).data?.detail || 'Unknown error' : 'Network issue'}
+        Помилка завантаження: {error ? (error as any).data?.detail || 'Unknown error' : 'Network issue'}
       </div>
     );
   }
@@ -192,7 +202,7 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
               mode === 'general' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            General
+            Загальний
           </button>
           <button
             onClick={() => handleModeChange('category')}
@@ -200,7 +210,7 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
               mode === 'category' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            By Category
+            За категоріями
           </button>
           <button
             onClick={() => handleModeChange('tag')}
@@ -208,39 +218,39 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
               mode === 'tag' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            By Tag
+            За тегами
           </button>
         </div>
       </div>
 
       <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-        {mode === 'general' && 'General Top'}
-        {mode === 'category' && `Top ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}s`}
-        {mode === 'tag' && `Top Venues with "${selectedTag || 'select one'}"`}
+        {mode === 'general' && 'Загальний топ'}
+        {mode === 'category' && `Топ ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}s`}
+        {mode === 'tag' && `Кращі заклади з "${selectedTag || 'оберіть один'}"`}
       </h2>
 
       {/* Filters Form - always visible */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">Filters</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">Фільтри</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
           {/* Order By */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Сортувати за</label>
             <select
               value={orderBy}
               onChange={handleOrderByChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="-rating">Rating</option>
-              <option value="views">Total Views</option>
-              <option value="daily_views">Daily Views</option>
-              <option value="newest">Newest</option>
+              <option value="-rating">За рейтингом</option>
+              <option value="views">Загальні перегляди</option>
+              <option value="daily_views">Перегляди за день</option>
+              <option value="newest">Найновіші</option>
             </select>
           </div>
 
           {/* Min Rating */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Min Rating</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Мін. рейтинг</label>
             <input
               type="number"
               min={1}
@@ -248,14 +258,14 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
               step={0.1}
               value={minRating}
               onChange={handleMinRatingChange}
-              placeholder="e.g. 4.0"
+              placeholder="напр. 4.0"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Max Rating */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Max Rating</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Макс. рейтинг</label>
             <input
               type="number"
               min={1}
@@ -263,7 +273,7 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
               step={0.1}
               value={maxRating}
               onChange={handleMaxRatingChange}
-              placeholder="e.g. 5.0"
+              placeholder="напр. 5.0"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -282,10 +292,10 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
               >
                 {mode === 'category' ? (
                   <>
-                    <option value="mixed">Mixed</option>
-                    <option value="cafe">Cafes</option>
-                    <option value="restaurant">Restaurants</option>
-                    <option value="bar">Bars</option>
+                    <option value="mixed">Змішані</option>
+                    <option value="cafe">Кафе</option>
+                    <option value="restaurant">Ресторани</option>
+                    <option value="bar">Бари</option>
                   </>
                 ) : (
                   tags.map((tag) => (
@@ -314,15 +324,20 @@ const GeneralTopComponent = ({}: GeneralTopComponentProps) => {
       {/* Results */}
       {venues.length === 0 ? (
         <div className="text-center py-12 text-gray-600">
-          No venues match your filters yet. Adjust the options above to explore more!
+          Немає закладів задовільняючих ваш фільтр. Змініть налаштування вище для пошуку!
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {venues.map((venue) => (
+          {paginatedVenues.map((venue) => (
             <VenueCard key={venue.id} venue={venue} mode="grid" />
           ))}
         </div>
       )}
+        <PaginationComponent
+        currentPage={currentPage}
+        totalPages={totalPages}
+        paramName={'page'}
+      />
     </div>
   );
 };

@@ -1,11 +1,24 @@
 import { useState } from 'react';
 import { useGetGlobalNewsQuery, useCreateNewsMutation, useDeleteNewsMutation } from '../../redux/api/newsApi';
+import { useSearchParams } from "react-router-dom";
+import PaginationComponent from "../../components/common/PaginationComponent.tsx";
 import type { INews } from '../../models/INews';
+
+const PAGE_SIZE = 2;
 
 const AdminGlobalNews = () => {
   const { data: news = [], isLoading } = useGetGlobalNewsQuery();
   const [createNews] = useCreateNewsMutation();
   const [deleteNews] = useDeleteNewsMutation();
+
+  const [searchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const totalPages = Math.ceil((news.length || 0) / PAGE_SIZE);
+  const paginatedNews = news.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   // Form state
   const [showForm, setShowForm] = useState(false);
@@ -46,13 +59,11 @@ const AdminGlobalNews = () => {
       return;
     }
 
-    // Create FormData for submission
     const submitData = new FormData();
     submitData.append('title', formData.title);
     submitData.append('content', formData.content);
     submitData.append('type', formData.type);
     submitData.append('is_paid', formData.is_paid.toString());
-    // No venue_id for global news
 
     if (photo) {
       submitData.append('photo', photo);
@@ -61,11 +72,9 @@ const AdminGlobalNews = () => {
     try {
       await createNews(submitData).unwrap();
       setSuccess(true);
-      // Reset form
       setFormData({ title: '', content: '', type: 'general', is_paid: false });
       setPhoto(null);
       setShowForm(false);
-      // Hide success after 3s
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
       setError(err.data?.detail || 'Failed to create news. Please try again.');
@@ -83,30 +92,32 @@ const AdminGlobalNews = () => {
   if (isLoading) return <p className="text-center py-8 text-gray-600">Завантажуються новини...</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Загальні новини ({news.length})</h2>
+    <div className="space-y-10">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-3xl font-bold text-gray-900">
+          Загальні новини ({news.length})
+        </h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700"
+          className="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
         >
-          {showForm ? 'Скасувати' : 'Додати новини'}
+          {showForm ? 'Скасувати' : 'Додати новину'}
         </button>
       </div>
 
       {/* Success Message */}
       {success && (
-        <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
+        <div className="p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl text-center font-medium">
           Новини успішно створено!
         </div>
       )}
 
       {/* Create Form */}
       {showForm && (
-        <div className="bg-white shadow-md rounded-lg p-6 mb-8">
-          <h3 className="text-lg font-semibold mb-4">Створити новину</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Title */}
+        <div className="bg-white shadow-md rounded-2xl p-8">
+          <h3 className="text-xl font-semibold mb-6">Створити нову новину</h3>
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
                 Заголовок *
@@ -118,12 +129,11 @@ const AdminGlobalNews = () => {
                 value={formData.title}
                 onChange={handleInputChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Введіть заголовок"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Введіть заголовок новини"
               />
             </div>
 
-            {/* Content */}
             <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
                 Вміст *
@@ -134,47 +144,46 @@ const AdminGlobalNews = () => {
                 value={formData.content}
                 onChange={handleInputChange}
                 required
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Введіть вміст новини"
+                rows={5}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Введіть текст новини"
               />
             </div>
 
-            {/* Type */}
-            <div>
-              <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-                Тип *
-              </label>
-              <select
-                id="type"
-                name="type"
-                value={formData.type}
-                onChange={handleInputChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="general">Загальне</option>
-                <option value="promotion">Промо</option>
-                <option value="event">Подія</option>
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
+                  Тип *
+                </label>
+                <select
+                  id="type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="general">Загальне</option>
+                  <option value="promotion">Промо / Акція</option>
+                  <option value="event">Подія</option>
+                </select>
+              </div>
+
+              <div className="flex items-center pt-8">
+                <input
+                  type="checkbox"
+                  id="is_paid"
+                  name="is_paid"
+                  checked={formData.is_paid}
+                  onChange={handleInputChange}
+                  className="h-5 w-5 text-blue-600 rounded border-gray-300"
+                />
+                <label htmlFor="is_paid" className="ml-3 text-gray-700 font-medium">
+                  Платний контент
+                </label>
+              </div>
             </div>
 
-            {/* Is Paid */}
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="is_paid"
-                name="is_paid"
-                checked={formData.is_paid}
-                onChange={handleInputChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="is_paid" className="ml-2 block text-sm text-gray-700">
-                Платний контент
-              </label>
-            </div>
-
-            {/* Photo */}
             <div>
               <label htmlFor="photo" className="block text-sm font-medium text-gray-700 mb-2">
                 Фото (необов'язково)
@@ -182,21 +191,20 @@ const AdminGlobalNews = () => {
               <input
                 type="file"
                 id="photo"
-                name="photo"
                 accept="image/*"
                 onChange={handlePhotoChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {photo && <p className="text-sm text-gray-500 mt-1">Обрано: {photo.name}</p>}
+              {photo && <p className="text-sm text-gray-500 mt-2">Обрано: {photo.name}</p>}
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 pt-4">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="flex-1 bg-blue-600 text-white py-3.5 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
               >
-                {isSubmitting ? 'Створюється...' : 'Створити'}
+                {isSubmitting ? 'Створюється...' : 'Опублікувати новину'}
               </button>
               <button
                 type="button"
@@ -206,15 +214,14 @@ const AdminGlobalNews = () => {
                   setPhoto(null);
                   setError(null);
                 }}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400"
+                className="flex-1 bg-gray-200 text-gray-700 py-3.5 rounded-xl font-semibold hover:bg-gray-300 transition"
               >
                 Скасувати
               </button>
             </div>
 
-            {/* Error Message */}
             {error && (
-              <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+              <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl">
                 {error}
               </div>
             )}
@@ -223,33 +230,47 @@ const AdminGlobalNews = () => {
       )}
 
       {/* News List */}
-      <div className="space-y-4">
-        {news.length === 0 ? (
-          <p className="text-center py-8 text-gray-600">Немає новин</p>
+      <div className="space-y-6">
+        {paginatedNews.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
+            <p className="text-gray-500 text-xl">Немає загальних новин</p>
+          </div>
         ) : (
-          news.map((item: INews) => (
-            <div key={item.id} className="bg-white p-6 rounded-xl shadow flex justify-between items-start">
+          paginatedNews.map((item: INews) => (
+            <div key={item.id} className="bg-white p-6 rounded-2xl shadow border flex justify-between items-start gap-6">
               <div className="flex-1">
-                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-gray-600 mb-2">
-                  Тип: {item.type.charAt(0).toUpperCase() + item.type.slice(1)} |{' '}
-                  {item.is_paid ? 'Платний' : 'Безкоштовний'}
+                <h3 className="font-bold text-xl mb-2">{item.title}</h3>
+                <p className="text-gray-600 mb-3">
+                  {item.type.charAt(0).toUpperCase() + item.type.slice(1)} •
+                  {item.is_paid ? ' Платний' : ' Безкоштовний'} •
+                  {new Date(item.created_at).toLocaleDateString('uk-UA')}
                 </p>
-                <p className="text-gray-600 mb-2">Створено: {new Date(item.created_at).toLocaleDateString()}</p>
-                <p className="text-gray-700">{item.content.substring(0, 150)}...</p>
+                <p className="text-gray-700 line-clamp-3">{item.content}</p>
                 {item.photo && (
-                  <img src={item.photo} alt={item.title} className="mt-2 w-20 h-20 object-cover rounded" />
+                  <img
+                    src={item.photo}
+                    alt={item.title}
+                    className="mt-4 w-24 h-24 object-cover rounded-xl"
+                  />
                 )}
               </div>
               <button
                 onClick={() => handleDelete(item.id)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-4"
+                className="bg-red-600 text-white px-5 py-2 rounded-xl hover:bg-red-700 transition text-sm font-medium"
               >
                 Видалити
               </button>
             </div>
           ))
         )}
+      </div>
+
+      {/* Pagination */}
+      <div className="pt-10 flex justify-center">
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
