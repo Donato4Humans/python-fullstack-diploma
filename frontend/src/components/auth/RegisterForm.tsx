@@ -1,13 +1,23 @@
 import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
+
 import type { ISignUpRequest } from "../../models/IAuth";
+import {registerSchema} from "../../validators/register_validator.ts";
 
 interface RegisterFormProps {
   onSubmit: (data: ISignUpRequest) => Promise<void>;
 }
 
 const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ISignUpRequest>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm<ISignUpRequest>({
+    resolver: joiResolver(registerSchema),
+    mode: 'onSubmit',
+  });
 
   return (
     <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -19,7 +29,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         <input
           id="email"
           type="email"
-          {...register('email', { required: 'Email обов\'язковий' })}
+          {...register('email')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
@@ -33,20 +43,20 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         <input
           id="password"
           type="password"
-          {...register('password', { required: 'Пароль обов\'язковий' })}
+          {...register('password')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
       </div>
 
-      {/* Profile Fields - All Required */}
+      {/* Profile Fields */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
           Ім'я
         </label>
         <input
           id="name"
-          {...register('profile.name', { required: 'Ім\'я обов\'язкове' })}
+          {...register('profile.name')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.name && <p className="mt-1 text-sm text-red-600">{errors.profile.name.message}</p>}
@@ -58,7 +68,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         </label>
         <input
           id="surname"
-          {...register('profile.surname', { required: 'Прізвище обов\'язкове' })}
+          {...register('profile.surname')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.surname && <p className="mt-1 text-sm text-red-600">{errors.profile.surname.message}</p>}
@@ -71,7 +81,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         <input
           type="number"
           id="age"
-          {...register('profile.age', { required: 'Вік обов\'язковий', min: { value: 18, message: 'Мінімум 18 років' } })}
+          {...register('profile.age')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.age && <p className="mt-1 text-sm text-red-600">{errors.profile.age.message}</p>}
@@ -83,7 +93,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         </label>
         <select
           id="gender"
-          {...register('profile.gender', { required: 'Стать обов\'язкова' })}
+          {...register('profile.gender')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         >
           <option value="">Обрати</option>
@@ -94,14 +104,13 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         {errors.profile?.gender && <p className="mt-1 text-sm text-red-600">{errors.profile.gender.message}</p>}
       </div>
 
-      {/* Address Fields */}
       <div>
         <label htmlFor="street" className="block text-sm font-medium text-gray-700">
           Вулиця
         </label>
         <input
           id="street"
-          {...register('profile.street', { required: 'Вулиця обов\'язкова' })}
+          {...register('profile.street')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.street && <p className="mt-1 text-sm text-red-600">{errors.profile.street.message}</p>}
@@ -113,7 +122,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         </label>
         <input
           id="city"
-          {...register('profile.city', { required: 'Місто обов\'язкове' })}
+          {...register('profile.city')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.city && <p className="mt-1 text-sm text-red-600">{errors.profile.city.message}</p>}
@@ -125,7 +134,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         </label>
         <input
           id="region"
-          {...register('profile.region', { required: 'Регіон обов\'язковий' })}
+          {...register('profile.region')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.region && <p className="mt-1 text-sm text-red-600">{errors.profile.region.message}</p>}
@@ -137,7 +146,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         </label>
         <input
           id="country"
-          {...register('profile.country', { required: 'Країна обов\'язкова' })}
+          {...register('profile.country')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.country && <p className="mt-1 text-sm text-red-600">{errors.profile.country.message}</p>}
@@ -150,7 +159,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         <input
           type="number"
           id="house"
-          {...register('profile.house', { required: 'Номер будинку обов\'язковий' })}
+          {...register('profile.house')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.profile?.house && <p className="mt-1 text-sm text-red-600">{errors.profile.house.message}</p>}

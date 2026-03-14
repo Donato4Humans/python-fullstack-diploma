@@ -1,6 +1,6 @@
 import { useGetFavoritesQuery, useRemoveFavoriteMutation } from '../../redux/api/favoritesApi';
 import VenueCard from '../../components/venues/VenueCard';
-import { useSearchParams } from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import PaginationComponent from "../../components/common/PaginationComponent.tsx";
 
 const PAGE_SIZE = 1;
@@ -38,16 +38,16 @@ const FavoritesPage = () => {
       {favorites.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-2xl shadow-sm">
           <p className="text-gray-500 text-xl mb-6">У вас ще немає улюблених закладів</p>
-          <a
-            href="/venues"
+          <Link
+            to="/venues"
             className="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-2xl font-semibold hover:bg-blue-700 transition"
           >
             Переглянути всі заклади
-          </a>
+          </Link>
         </div>
       ) : (
         <>
-          {/* Venues Grid - Adjusted for sidebar */}
+          {/* Venues Grid  */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {paginatedFavorites.map((favorite) => (
               <div key={favorite.id} className="relative group">

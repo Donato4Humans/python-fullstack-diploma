@@ -67,6 +67,7 @@ export const routes: RouteObject[] = [
                 children: [
                     { path: 'sign-in', element: <SignInPage /> },
                     { path: 'sign-up', element: <SignUpPage /> },
+                    { path: 'recovery', element: <ProfileSecurityPage /> },
                 ],
             },
         ],

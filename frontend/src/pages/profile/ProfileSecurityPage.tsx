@@ -1,8 +1,9 @@
-
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
 import { useRecoveryRequestMutation, useRecoveryPasswordMutation } from '../../redux/api/authApi';
-import { useSearchParams } from 'react-router-dom';
 
 interface RequestForm {
   email: string;
@@ -13,16 +14,50 @@ interface ResetForm {
   confirm_password: string;
 }
 
+const requestSchema = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required()
+    .messages({
+      'string.email': 'Введіть коректний email',
+      'any.required': 'Email обов\'язковий',
+    }),
+});
+
+const resetSchema = Joi.object({
+  password: Joi.string()
+    .pattern(/\S/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Пароль не може складатися лише з пробілів',
+      'any.required': 'Пароль обов\'язковий',
+    }),
+
+  confirm_password: Joi.string()
+    .valid(Joi.ref('password'))
+    .required()
+    .messages({
+      'any.only': 'Паролі не співпадають',
+      'any.required': 'Підтвердження паролю обов\'язкове',
+    }),
+});
+
 const ProfileSecurityPage = () => {
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get('token'); // from recovery link
+  const { token } = useParams<{ token: string }>();
 
   const [step, setStep] = useState<'request' | 'reset' | 'success'>(token ? 'reset' : 'request');
   const [recoveryRequest] = useRecoveryRequestMutation();
   const [recoveryPassword] = useRecoveryPasswordMutation();
 
-  const requestForm = useForm<RequestForm>();
-  const resetForm = useForm<ResetForm>();
+  const requestForm = useForm<RequestForm>({
+    resolver: joiResolver(requestSchema),
+    mode: 'onSubmit',
+  });
+
+  const resetForm = useForm<ResetForm>({
+    resolver: joiResolver(resetSchema),
+    mode: 'onSubmit',
+  });
 
   const onRequest = async (data: RequestForm) => {
     try {
@@ -54,19 +89,24 @@ const ProfileSecurityPage = () => {
   if (step === 'request') {
     return (
       <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md">
-        <h1 className="text-3xl font-bold mb-6">Change Password</h1>
-        <p className="text-gray-600 mb-6">Enter your email to receive a password reset link</p>
+        <h1 className="text-3xl font-bold mb-6">Змінити/відновити пароль</h1>
+        <p className="text-gray-600 mb-6">Введіть свою електронну пошту для отримання посилання для відновлення або зміни паролю</p>
         <form onSubmit={requestForm.handleSubmit(onRequest)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Email</label>
             <input
               type="email"
-              {...requestForm.register('email', { required: true })}
+              {...requestForm.register('email')}
               className="w-full p-3 border rounded-lg"
             />
+            {requestForm.formState.errors.email && (
+              <p className="text-red-600 text-sm mt-1">
+                {requestForm.formState.errors.email.message}
+              </p>
+            )}
           </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg">
-            Send Recovery Email
+            Відправити запит відновлення/зміни на пошту
           </button>
         </form>
       </div>
@@ -76,8 +116,8 @@ const ProfileSecurityPage = () => {
   if (step === 'success') {
     return (
       <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md text-center">
-        <h1 className="text-3xl font-bold mb-6">Check Your Email</h1>
-        <p className="text-gray-600">We sent a password reset link to your email.</p>
+        <h1 className="text-3xl font-bold mb-6">Перевірте вашу електронну пошту</h1>
+        <p className="text-gray-600">Ми надіслали вам посилання для відновлення.</p>
       </div>
     );
   }
@@ -85,26 +125,36 @@ const ProfileSecurityPage = () => {
   // step === 'reset'
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md">
-      <h1 className="text-3xl font-bold mb-6">Set New Password</h1>
+      <h1 className="text-3xl font-bold mb-6">Встановити новий пароль</h1>
       <form onSubmit={resetForm.handleSubmit(onReset)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">New Password</label>
+          <label className="block text-sm font-medium mb-2">Новий пароль</label>
           <input
             type="password"
-            {...resetForm.register('password', { required: true, minLength: 6 })}
+            {...resetForm.register('password')}
             className="w-full p-3 border rounded-lg"
           />
+          {resetForm.formState.errors.password && (
+            <p className="text-red-600 text-sm mt-1">
+              {resetForm.formState.errors.password.message}
+            </p>
+          )}
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Confirm Password</label>
+          <label className="block text-sm font-medium mb-2">Підтвердити пароль</label>
           <input
             type="password"
-            {...resetForm.register('confirm_password', { required: true })}
+            {...resetForm.register('confirm_password')}
             className="w-full p-3 border rounded-lg"
           />
+          {resetForm.formState.errors.confirm_password && (
+            <p className="text-red-600 text-sm mt-1">
+              {resetForm.formState.errors.confirm_password.message}
+            </p>
+          )}
         </div>
         <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg">
-          Change Password
+          Змінити пароль
         </button>
       </form>
     </div>

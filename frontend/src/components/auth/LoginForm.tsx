@@ -1,36 +1,71 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
 import type { ISignInRequest } from "../../models/IAuth";
 
 interface LoginFormProps {
   onSignIn: any; // RTK mutation (useSignInMutation)
 }
 
+const loginSchema = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } }) // disable strict email`s TLD list check
+    .required()
+    .messages({
+      'string.email': 'Введіть коректний email',
+      'any.required': 'Email обов\'язковий',
+    }),
+
+  password: Joi.string()
+    .pattern(/\S/) // requires at least one non-space character anywhere
+    .required()
+    .messages({
+      'string.pattern.base': 'Пароль не може складатися лише з пробілів',
+      'any.required': 'Пароль обов\'язковий',
+    }),
+});
+
+const ERROR_TRANSLATIONS: Record<string, string> = {
+  "No active account found with the given credentials": "Не знайдено активного акаунту з вказаними даними!",
+  // other specific backend messages here
+};
+
 const LoginForm = ({ onSignIn }: LoginFormProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Where user wanted to go before redirect to login
   const from = location.state?.from?.pathname || '/';
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ISignInRequest>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm<ISignInRequest>({
+    resolver: joiResolver(loginSchema),
+    mode: 'onSubmit',
+  });
 
   const handleFormSubmit = async (data: ISignInRequest) => {
-    setErrorMessage(''); // Clear previous error
+  setErrorMessage('');
 
-    try {
-      await onSignIn(data).unwrap();
+  try {
+    await onSignIn(data).unwrap();
+    navigate(from, { replace: true });
+  } catch (error: any) {
+    // Extract the raw message from the backend
+    const rawMessage = error?.data?.detail ||
+                       error?.data?.non_field_errors?.[0];
 
-      // on success go to the page user tried to visit
-      navigate(from, { replace: true });
+    // Translate if we recognize it, otherwise use a generic message
+    const translatedMessage = (rawMessage && ERROR_TRANSLATIONS[rawMessage])
+      || 'Невірний email або пароль';
 
-    } catch (error: any) {
-      const message = 'Невірний email або пароль';
-      setErrorMessage(message);
-    }
-  };
+    setErrorMessage(translatedMessage);
+  }
+};
 
   return (
     <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleFormSubmit)}>
@@ -41,7 +76,7 @@ const LoginForm = ({ onSignIn }: LoginFormProps) => {
         <input
           id="email"
           type="email"
-          {...register('email', { required: 'Email обов\'язковий' })}
+          {...register('email')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
@@ -54,13 +89,12 @@ const LoginForm = ({ onSignIn }: LoginFormProps) => {
         <input
           id="password"
           type="password"
-          {...register('password', { required: 'Пароль обов\'язковий' })}
+          {...register('password')}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
         {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
       </div>
 
-      {/* Error message - stays on page */}
       {errorMessage && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center font-medium">
           {errorMessage}
@@ -75,6 +109,17 @@ const LoginForm = ({ onSignIn }: LoginFormProps) => {
         {isSubmitting ? 'Авторизація...' : 'Увійти'}
       </button>
 
+      {/* Recovery link */}
+      <div className="text-center">
+        <Link
+          to="/auth/recovery"
+          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+        >
+          Забули пароль? Натисніть для відновлення паролю
+        </Link>
+      </div>
+
+      {/* Sign Up link */}
       <div className="text-center">
         <Link to="/auth/sign-up" className="text-blue-600 hover:text-blue-500">
           Не маєте акаунту? Зареєструйтесь

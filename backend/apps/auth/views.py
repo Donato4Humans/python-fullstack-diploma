@@ -36,7 +36,7 @@ class RecoveryRequestView(GenericAPIView):
         post:
             recovery request
     """
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     def get_serializer(self):
         return None
 
@@ -53,7 +53,7 @@ class RecoveryPasswordView(GenericAPIView):
         post:
             recovery password and get token
     """
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     def get_serializer(self):
         return None
 

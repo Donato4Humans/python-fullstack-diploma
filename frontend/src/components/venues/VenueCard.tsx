@@ -273,18 +273,41 @@ const VenueCard = ({ venue, mode = 'grid', isOwnerView = false }: VenueCardProps
         {/* Comment form */}
         <div className="mb-16">
           <h3 className="text-2xl font-bold mb-6 text-gray-900">Додати коментар</h3>
-          <form onSubmit={handleCommentSubmit} className="space-y-6">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Ваш коментар..."
-              className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-              rows={5}
-            />
-            <button type="submit" className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700">
-              Надіслати коментар
-            </button>
-          </form>
+
+          {user ? (
+            <form onSubmit={handleCommentSubmit} className="space-y-6">
+              <textarea
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Ваш коментар..."
+                className="w-full p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                rows={5}
+              />
+              <button type="submit" className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700">
+                Надіслати коментар
+              </button>
+            </form>
+          ) : (
+            <div className="bg-gray-100 p-8 rounded-2xl text-center">
+              <p className="text-gray-700 text-lg mb-6">
+                Щоб залишити коментар, потрібно увійти в акаунт або зареєструватися
+              </p>
+              <div className="flex justify-center gap-4">
+                <Link
+                  to="/auth/sign-in"
+                  className="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700"
+                >
+                  Увійти
+                </Link>
+                <Link
+                  to="/auth/sign-up"
+                  className="bg-gray-700 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-800"
+                >
+                  Зареєструватися
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Existing Reviews */}
